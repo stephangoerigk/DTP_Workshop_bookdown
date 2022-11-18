@@ -1,0 +1,19 @@
+book_filename: "DZP_R_bookdown"
+delete_merged_file: true
+output_dir: "docs"
+language:
+  ui:
+    chapter_name: "Kapitel "
+rmd_files: [
+  "index.Rmd"
+  #"TrialDesign_Blackwell_19.Rmd",
+  # "Tabellen.Rmd",
+  # "Preprocessing.Rmd",
+  # "Korrelationen.Rmd",
+  # #"Einfache_Gruppenvergleiche.Rmd",
+  # "Regression.Rmd",
+  # "Mehrstufige_UVs.Rmd",
+  # "Mehrere_UVs.Rmd",
+  # "RMarkdown_Manuskripterstellung.Rmd"
+  ]
+

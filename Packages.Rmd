@@ -1,0 +1,17 @@
+# Packages
+
+You will need to install and load the following packages for these exercises:
+
+```{r}
+install.packages("BayesFactor")
+install.packages("MASS")
+install.packages("devtools") # if not yet installed
+library(devtools)
+install_github("nicebread/BFDA", subdir="package")
+
+library(MASS)
+library(tidyverse)
+library(lcmm)
+library(LCTMtools)
+```
+

@@ -1,0 +1,11 @@
+# Cluster Analysis
+
+### Packages needed
+
+You will need to install and load the following packages for these exercises:
+
+```{r thepackages, eval = FALSE}
+library(lme4)
+library(lmerTest)
+```
+

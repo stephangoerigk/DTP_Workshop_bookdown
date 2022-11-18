@@ -1,0 +1,419 @@
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# library(BFDA)
+# library(BayesFactor)
+# library(MASS)
+```
+
+Exercises and Scripts for Trial Design part of Workshop: "Innovative approaches to clinical trial design and analysis", Ruhr-Universität Bochum, 19.11.2022
+
+# Packages needed
+
+You will need to install and load the following packages for these exercises:
+
+```{r thepackages, eval = FALSE}
+
+# install.packages("BayesFactor")
+# install.packages("MASS")
+# install.packages("devtools") # if not yet installed
+# library(devtools)
+# install_github("nicebread/BFDA", subdir="package")
+# 
+# library(BFDA)
+# library(BayesFactor)
+# library(MASS)
+
+#Plus BFDA - see next section
+```
+
+# Trial Design
+
+## Exercise 1: Simulating data using BFDA and selecting trial parameters
+
+The Bayes factor design analysis (BFDA) package provides a simple way to simulate and analyse sequential bayesian analyses for trial planning. For more complex analyses you can create your own custom simulations (e.g. see the scripts at https://osf.io/8mxda/ for example)
+
+Please see https://rawgit.com/nicebread/BFDA/master/package/doc/BFDA_manual.html for the BFDA manual and full instructions
+
+### Simulate sequential analyses for planning
+
+A first step is to simulate the results of sequential analyses under i) the alternative hypothesis for the target effect size of interest (to find parameters that give you sufficient power), and ii) the null hypothesis (to find parameters that give a suitable false-positive (Type 1) error rate). Once you have suitable parameters for these, you can then simulate a range of other effect sizes to get a better picture of your power at different effect sizes.
+
+As simulations can take some time, for demonstration purposes in this exercise we will i) attempt to find a medium effect size (d = 0.5), as this requires smaller maximum sample sizes, and ii) only do a small number of simulations (500), as we are not too worried about accuracy/precision - for planning an actual trial you would want to do a larger number (e.g. 10,000)
+
+Please run the following simulations as preparation:
+
+```{r BFDAsims, eval = FALSE}
+set.seed(19112022)
+
+sim.H1 <- BFDA.sim(expected.ES=0.5, type="t.between",prior=list("Cauchy",list(prior.location=0, prior.scale=sqrt(2)/2)), n.min=10, n.max=80, alternative="greater", boundary=Inf, B=500, verbose=TRUE, stepsize = 5)
+
+sim.H0 <- BFDA.sim(expected.ES=0, type="t.between", prior=list("Cauchy", list(prior.location=0, prior.scale=sqrt(2)/2)), n.min=10, n.max=80, alternative="greater", boundary=Inf, B=500, verbose=TRUE, stepsize = 5)
+
+#if you notice these have finished and you have time you could also run some in-between or larger values, e.g.
+
+sim.H0.2 <- BFDA.sim(expected.ES=0.2, type="t.between", prior=list("Cauchy", list(prior.location=0, prior.scale=sqrt(2)/2)), n.min=10, n.max=80, alternative="greater", boundary=Inf, B=500, verbose=TRUE, stepsize = 5)
+
+sim.H0.4 <- BFDA.sim(expected.ES=0.4, type="t.between", prior=list("Cauchy", list(prior.location=0, prior.scale=sqrt(2)/2)), n.min=10, n.max=80, alternative="greater", boundary=Inf, B=500, verbose=TRUE, stepsize = 5)
+
+sim.H0.6 <- BFDA.sim(expected.ES=0.6, type="t.between", prior=list("Cauchy", list(prior.location=0, prior.scale=sqrt(2)/2)), n.min=10, n.max=80, alternative="greater", boundary=Inf, B=500, verbose=TRUE, stepsize = 5)
+
+#etc...
+
+```
+
+As an explanation, these simulate sequential Bayes-factor based analyses based on:
+
+a) Effect size of d = 0.5 (expected.ES=0.5) for sim.H1, or d=0 for sim.H0
+
+b) a between-group t-test, e.g. difference between two groups in change in symptoms (type="t.between")
+
+c) use a default Cauchy prior with a rscale value of 0.707 (prior=list("Cauchy", list(prior.location=0, prior.scale=sqrt(2)/2))) [we can't go into priors today but default ones like this work fine! See Stefan et al. (2019) for discussion of using informed priors with BFDA, https://link.springer.com/article/10.3758/s13428-018-01189-8]
+
+d) a minimum sample size (per arm) of 10 (n.min = 10) - note that when trying to find parameters later you can choose higher minimum sample sizes, but not lower
+
+e) a maximum sample size (per arm) of 80 (n.max = 80) - note that when trying out parameters later on you can try lower, but not higher maximum sample sizes
+
+f) a directional (i.e. one-tailed) Bayes Factor (alternative = "greater" and boundary = Inf). We are interested in whether one treatment is superior to another, not whether it is different.
+
+g) we use 500 simulations (B = 500) - fine for getting a feel, but for finalising your study design you would want a larger number e.g. 10,000
+
+h) we carry out the analysis every 5 participants (stepsize = 5). You can repeat the analysis every 1 participant, but this simply takes longer to simulate so we don't do this here.
+
+If you were carrying out large important simulations that took a long time you would probably want to save them so that you can load them again later without having to re-run the simulations:
+
+```{r saveloaddemo, eval = FALSE}
+#Saving a BFDA simulation object:
+saveRDS(sim.H1,"sim.H1.d0.5.dd.mm.yy.RDS")
+saveRDS(sim.H0,"sim.H1.d0.0.dd.mm.yy.RDS")
+#to load again
+sim.H1<-readRDS("sim.H1.d0.5.dd.mm.yy.RDS")
+sim.H0<-readRDS("sim.H1.d0.0.dd.mm.yy.RDS")
+```
+
+### Try out different analysis parameters to find a set that fits your requirements
+
+#### Overview
+
+Now that you have a simulated set of sequential BFs you can test out what would happen if you applied different sets of analysis parameters to them.
+
+These are:
+
+* Nmin: The minimum sample size (per arm) at which you start the sequential analyses
+
+* Nmax: The maximum sample size (per arm) at which you drop an arm (if it has not already hit a BF boundary)
+
+* BFfail: A BF threshold for failure (i.e. sufficient evidence for the null hypothesis of non-superiority to the control condition vs. the alternative hypothesis of superiority). This will be a value less than 1 (e.g. 1/3, 1/5, 1/10 etc)
+
+* BFsuccess: A BF threshold for success (i.e. sufficient evidence for the alternative hypothesis of superiority over the control condition vs.the null hypothesis of non-superiority to the control condition ). This will be a value greater than 1 (e.g. 3, 5, 10)
+
+We are interested in:
+
+i) power: what proportion of arms hit the BFsuccess threshold when d > 0
+
+ii) false-positive / Type 1 error rate: what proportion of arms hit BF success threshold when d = 0 (or d < 0)
+
+iii) keeping the average sample sizes as low as possible
+
+There are several functions in BFDA to analyse simulation outcomes, but here we will just use the plot function. We will start by using the boundary conditions of the simulations (i.e. n.min = 10 and n.max = 80), and a default set of starting boundaries of BFfail = 1/5 and BFsuccess = 5 (boundary=c(1/5, 5)). The parameter n.trajectories just tells it how many lines to draw on the graph (representing individual BF trajectories)
+
+```{r exampleplots, eval = FALSE}
+#First plot for H1
+dev.new() #sometimes the plot doesn't work if you don't make a new window first
+plot(sim.H1, n.min=10, n.max=80, boundary=c(1/5, 5), n.trajectories = 60)
+
+#Then plot for H0
+dev.new() #sometimes the plot doesn't work if you don't make a new window first
+plot(sim.H0, n.min=10, n.max=80, boundary=c(1/5, 5), n.trajectories = 60)
+
+#There are other functions in BFDA to explore the simulations/sequential analyses but I find the plots the most informative. However, feel free to explore.
+```
+
+#### Exercise steps
+
+1. Play around with the parameters (n.min, n.max, the BF boundaries) and see what happens. e.g. increasing n.min will tend to reduce error rates, but means you lose the chance to make decisions so quickly. Remember that the BF boundaries don't have to be symmetrical (e.g. you could use boundary=c(1/3,10) if you weren't so worried about false-negatives but were very concerned about potential false-positives)
+
+2. Try to come up with a set of parameters that gives you 80% power and a false-positive (type 1) error rate of <5%, i.e. for H1, ≥ 80% stopping at H1 boundary, for H0, < 5% (i.e. 4%) stopping at h1 boundary. 
+
+3. Once you find this you can see if you can improve on these, to reduce the potential sample sizes needed.
+
+4. See what proportion of participants will hit BFsuccess (H1 boundary) for sim.H1 at different sample sizes (by adjusting n.max): the value for which 50% are stopping at the nmax boundary tells you the average sample size you might expect if d=0.5 with these parameters. You can then do the same for sim.H0. It might be that you can find a set of parameters that give you smaller average sample size predictions.
+
+5. If you have simulated other effect sizes you can see what happens for these, e.g. what if you power for d=0.5, but d=0.4? 
+
+#### Summarising the simulations for planning
+
+One way to collect this information is into a table, as provided in the examples in Table 2 and Table 3 in the paper by Blackwell et al. (2019) https://journals.sagepub.com/doi/full/10.1177/2167702619858071
+
+Table 2 from the paper is reproduced below. This illustrates a particular set of parameters chosen for a small to medium between-group effect size equivalent to Cohen’s d = 0.4: Nmin = 35 (per arm), Nmax = 125 (per arm), BFfail = 1/4, and a BFsuccess = 5 (and directional default Cauchy prior, rscale parameter = √2/2).
+
+Here we can see that we have a false-positive rate of < 5% (top row), and 81% to find d = 0.4. We can also see that 54% of the time, we would hit BFfail at Nmin when d = 0, and 54% of the time we would stop the trial at n = 50 per arm when d = 0.4 (8% at BFfail, 46% at BFsuccess):
+
+<br><table><thead style="background-color: lightgray; border: 1px solid black;"><tr><th data-xml-align="left" rowspan="3">“True” effect size (Cohen’s <i>d</i>)</th><th data-xml-align="center" colspan="10"><span>Probability of reaching threshold at each participant number (per group)</span></th></tr><tr data-xml-align="center"><th colspan="5"><span>Discontinuation threshold</span></th><th colspan="5"><span>Replacement threshold</span></th></tr><tr data-xml-align="center"><th><i>n</i> = 35</th><th><i>n</i> = 50</th><th><i>n</i> = 75</th><th><i>n</i> = 100</th><th><i>n</i> = 125</th><th><i>n</i> = 35</th><th><i>n</i> = 50</th><th><i>n</i> = 75</th><th><i>n</i> = 100</th><th><i>n</i> = 125</th></tr></thead><tbody><tr><td data-xml-align="left">0 (null)</td><td data-xml-align="center">54</td><td data-xml-align="center">70</td><td data-xml-align="center">81</td><td data-xml-align="center">86</td><td data-xml-align="center">89</td><td data-xml-align="center"><b>1</b></td><td data-xml-align="center"><b>3</b></td><td data-xml-align="center"><b>3</b></td><td data-xml-align="center"><b>4</b></td><td data-xml-align="center"><b>4</b></td></tr><tr><td data-xml-align="left">0.1</td><td data-xml-align="center">37</td><td data-xml-align="center">52</td><td data-xml-align="center">62</td><td data-xml-align="center">68</td><td data-xml-align="center">71</td><td data-xml-align="center">4</td><td data-xml-align="center">7</td><td data-xml-align="center">10</td><td data-xml-align="center">12</td><td data-xml-align="center"><i>13</i></td></tr><tr><td data-xml-align="left">0.2</td><td data-xml-align="center">22</td><td data-xml-align="center">33</td><td data-xml-align="center">41</td><td data-xml-align="center">45</td><td data-xml-align="center">47</td><td data-xml-align="center">8</td><td data-xml-align="center">15</td><td data-xml-align="center">23</td><td data-xml-align="center">28</td><td data-xml-align="center"><i>32</i></td></tr><tr><td data-xml-align="left">0.3</td><td data-xml-align="center">11</td><td data-xml-align="center">18</td><td data-xml-align="center">22</td><td data-xml-align="center">24</td><td data-xml-align="center">25</td><td data-xml-align="center">16</td><td data-xml-align="center">29</td><td data-xml-align="center">43</td><td data-xml-align="center">52</td><td data-xml-align="center"><i>58</i></td></tr><tr><td data-xml-align="left">0.4</td><td data-xml-align="center">5</td><td data-xml-align="center">8</td><td data-xml-align="center">10</td><td data-xml-align="center">10</td><td data-xml-align="center">11</td><td data-xml-align="center">28</td><td data-xml-align="center">46</td><td data-xml-align="center">65</td><td data-xml-align="center">75</td><td data-xml-align="center"><i>81</i></td></tr><tr><td data-xml-align="left">0.5</td><td data-xml-align="center">2</td><td data-xml-align="center">3</td><td data-xml-align="center">4</td><td data-xml-align="center">4</td><td data-xml-align="center">4</td><td data-xml-align="center">43</td><td data-xml-align="center">64</td><td data-xml-align="center">82</td><td data-xml-align="center">91</td><td data-xml-align="center"><i>94</i></td></tr><tr><td data-xml-align="left">0.6</td><td data-xml-align="center">1</td><td data-xml-align="center">1</td><td data-xml-align="center">1</td><td data-xml-align="center">1</td><td data-xml-align="center">1</td><td data-xml-align="center">60</td><td data-xml-align="center">80</td><td data-xml-align="center">94</td><td data-xml-align="center">97</td><td data-xml-align="center"><i>98</i></td></tr><tr><td data-xml-align="left">0.7</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">75</td><td data-xml-align="center">91</td><td data-xml-align="center">98</td><td data-xml-align="center">100</td><td data-xml-align="center"><i>100</i></td></tr><tr><td data-xml-align="left">0.8</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">0</td><td data-xml-align="center">88</td><td data-xml-align="center">97</td><td data-xml-align="center">100</td><td data-xml-align="center">100</td><td data-xml-align="center"><i>100</i></td></tr></tbody></table><br><br>
+
+Doing these plots is quite a long-winded way to arrive at such a table, but it at least gives you a good feel for what happens when you change the parameters. If you were doing your own simulations you could write a script to output a table automatically (e.g. see the scripts at https://osf.io/8mxda/ for example)
+
+## Exercise 2: Carry out sequential analysis of (simulated) trial data
+
+### Overview and setup
+
+In this exercise you will analyse some (simulated) data using the trial parameters you selected, and find out when you hit the BF boundaries.
+
+First you will need to simulate the trial data - please run the code below (which I'm happy to explain but there's no need to understand it for the exercise - it's just a means to provide you with the data to analyse):
+
+```{r simtrialdata, eval = FALSE}
+#Simulates 100 participants in each arm of trial where:
+#There is a correlation of r = 0.35 between pre and post-data
+#One arm is not superior to control, the other is
+set.seed(19112022)
+samples=100
+r=0.35
+data<-mvrnorm(n=samples,mu=c(1,0.8),Sigma=matrix(c(1,r,r,1),nrow=2),empirical=FALSE)
+X = data[,1]
+Y = data[,2]
+X<-as.integer(X*5+20)
+Y<-as.integer(Y*5+20)
+data<-mvrnorm(n=samples,mu=c(1,0.15),Sigma=matrix(c(1,r,r,1),nrow=2),empirical=FALSE)
+X1 = data[,1]
+Y1 = data[,2]
+X1<-as.integer(X1*5+20)
+Y1<-as.integer(Y1*5+20)
+data<-mvrnorm(n=samples,mu=c(1,0.9),Sigma=matrix(c(1,r,r,1),nrow=2),empirical=FALSE)
+X2 = data[,1]
+Y2 = data[,2]
+X2<-as.integer(X2*5+20)
+Y2<-as.integer(Y2*5+20)
+cdiff<-Y-X
+T1diff<-Y1-X1
+T2diff<-Y2-X2
+predata<-c(X,X1,X2)
+postdata<-c(Y,Y1,Y2)
+diffdata<-postdata-predata
+group<-c(rep("C",samples),rep("Tx1",samples),rep("Tx2",samples))
+dseq<-seq(1,samples*3)
+pid<-as.character(seq(1,samples*3))
+mydata<-(cbind(predata,postdata,diffdata,group))
+mydata<-mydata[sample(1:nrow(mydata)), ]
+mydata<-data.frame(cbind(pid,dseq,mydata))
+mydata$dseq<-as.integer(mydata$dseq)
+mydata$predata<-as.integer(mydata$predata)
+mydata$postdata<-as.integer(mydata$postdata)
+mydata$diffdata<-as.integer(mydata$diffdata)
+
+```
+
+You now have a dataframe (mydata) with pre and post outcome data for a pretend 3-arm trial of treatments for depression (i.e. a decrease in score on the outcome measure is good). There are three treatment arms, "C" (control condition, e.g. TA), "Tx1" (New treatment 1) and "Tx2" (New treatment 2). One arm is superior to control, one isn't. Each arm includes 100 participants. 
+
+Dataframe columns are:
+
+* pid = participant id (a string of a number from 1 to 300)
+* dseq = sequence in which they provided outcome data for the trial (numerical, here the same as pid for convenience)
+* predata = score on the depression outcome measure at pre-treatment
+* postdata = score on the depression outcome measure at post-treatment
+* diffdata = post-treatment score minus pre-treatment score
+* group = which group (C, Tx1, Tx2)
+
+### Exploring the data
+
+Take a look at the data (e.g. with View(mydata) ) to get a sense of it. You can then use the functions in the code chunk below to explore the potential outcome of applying sequential Bayesian analyses. 
+
+First, run the code below to load the two functions:
+
+```{r BFsnapshot, eval = FALSE}
+
+BFsnapshot<-function(BFdata,n=300,rs=(sqrt(2)/2)){
+
+  if (length(BFdata$pid)<n){
+    return("Error: n larger than number of participants");
+  }
+  
+  tryCatch(
+        {
+          tdata<-BFdata[1:n,]
+          cat("\n\n Total N = ",n,"\n\n")
+          cat("Control: n = ",length(tdata[tdata$group=="C",]$pid),", mean change (post minus pre-treatment) = ", mean(tdata[tdata$group=="C",]$diffdata,na.rm=TRUE)," (SD = ", sd(tdata[tdata$group=="C",]$diffdata,na.rm=TRUE),")\n\n",sep="")
+         cat("Tx1: n = ",length(tdata[tdata$group=="Tx1",]$pid),", mean change (post minus pre-treatment) = ", mean(tdata[tdata$group=="Tx1",]$diffdata,na.rm=TRUE)," (SD = ", sd(tdata[tdata$group=="Tx1",]$diffdata,na.rm=TRUE),")\n\n",sep="")
+         #effect size calculation
+         d<-effectsize::cohens_d(tdata[tdata$group=="C",]$diffdata,tdata[tdata$group=="Tx1",]$diffdata)
+         cat("Effect size vs. control: d=",d$Cohens_d," 95% CIs [",d$CI_low,",",d$CI_high,"]\n\n",sep="")
+         #Calculates directional Bayesian t-test (nullinterval=c(0,Inf))
+         BF<-BayesFactor::ttestBF(x=tdata[tdata$group=="C",]$diffdata,y=tdata[tdata$group=="Tx1",]$diffdata,nullinterval=c(0,Inf),rscale=rs)
+        cat("BF vs. control: BF=",exp(BF@bayesFactor$bf),"\n\n",sep="")
+
+        cat("Tx2: n = ",length(tdata[tdata$group=="Tx2",]$pid),", mean change (post minus pre-treatment) = ", mean(tdata[tdata$group=="Tx2",]$diffdata,na.rm=TRUE)," (SD = ", sd(tdata[tdata$group=="Tx2",]$diffdata,na.rm=TRUE),")\n\n",sep="")
+        #effect size calculation
+         d<-effectsize::cohens_d(tdata[tdata$group=="C",]$diffdata,tdata[tdata$group=="Tx2",]$diffdata)
+         cat("Effect size vs. control: d=",d$Cohens_d," 95% CIs [",d$CI_low,",",d$CI_high,"]\n\n",sep="")
+         #Calculates directional Bayesian t-test (nullinterval=c(0,Inf))
+         BF<-BayesFactor::ttestBF(x=tdata[tdata$group=="C",]$diffdata,y=tdata[tdata$group=="Tx2",]$diffdata,nullinterval=c(0,Inf),rscale=rs)
+        cat("BF vs. control: BF=",exp(BF@bayesFactor$bf),"\n\n",sep="") 
+          
+        },
+        error=function(cond) {
+          return (paste0("Something went wrong! ",cond))
+        })
+}
+
+seqBFs<-function(BFdata,rs=(sqrt(2)/2)){
+  tryCatch(
+        {
+          alldata<-BFdata[1:length(BFdata$pid),]
+          dsTx1<-vector()
+          dsTx2<-vector()
+          BFsTx1<-vector()
+          BFsTx2<-vector()
+          nsTx1<-vector()
+          nsTx2<-vector()
+          is<-vector()
+          #start at index number 10 to avoid problems
+          for (i in 10:length(alldata$pid)){
+          tdata<-alldata[1:i,]
+          Ns<-as.data.frame(cbind(table(tdata[1:i,]$group)))
+          dsTx1<-c(dsTx1,(effectsize::cohens_d(tdata[tdata$group=="C",]$diffdata,tdata[tdata$group=="Tx1",]$diffdata))$Cohens_d)
+          BFsTx1<-c(BFsTx1,exp((BayesFactor::ttestBF(x=tdata[tdata$group=="C",]$diffdata,y=tdata[tdata$group=="Tx1",]$diffdata,nullinterval=c(0,Inf),rscale=rs)@bayesFactor$bf)))
+            nsTx1<-c(nsTx1,Ns["Tx1",])
+            
+            dsTx2<-c(dsTx2,(effectsize::cohens_d(tdata[tdata$group=="C",]$diffdata,tdata[tdata$group=="Tx2",]$diffdata))$Cohens_d)
+            BFsTx2<-c(BFsTx2,exp((BayesFactor::ttestBF(x=tdata[tdata$group=="C",]$diffdata,y=tdata[tdata$group=="Tx2",]$diffdata,nullinterval=c(0,Inf),rscale=rs)@bayesFactor$bf)))
+            nsTx2<-c(nsTx2,Ns["Tx2",])
+            is<-c(is,i)
+          
+        }
+          allresults<-data.frame(cbind(is,nsTx1,dsTx1,BFsTx1,nsTx2,dsTx2,BFsTx2))
+          return(allresults)
+        },
+        error=function(cond) {
+          return (paste0("Something went wrong! ",cond))
+        })
+}
+
+
+
+```
+
+You can now use these two functions to explore the effect of doing sequential Bayesian analyses (here for simplicity, t-test on change scores).
+
+#### Function: BFsnapshot()
+
+BFsnapshot() can be used to give you a snapshot of the data at a particular point in time. Arguments are:
+
+* BFdata = the dataframe with the data (i.e. here it is mydata)
+* n = the total sample size / sequence number (up to a max of 300) you want to take the snapshot at (e.g. if you put 100 in here, it will give you a snapshot of the analysis outcomes at the point there were 100 total participants in the trial)
+* rs = you can ignore unless you want to try change the rscale parameter (sets to √2/2 as default)
+
+e.g. BFsnapshot(mydata,100) would give you analysis output when there are 100 people in the trial
+
+#### Function: seqBFs()
+
+seqBFs() outputs a dataframe with sequential BFs over the course of the simulated trial. You just pass it the dataframe (and can specify a rscale parameter if you want to change this)
+
+trialresults<-seqBFs(mydata)
+
+will give you a dataframe (trialresults), which you can then investigate (e.g. via View(trialresults), or you can try making some plots) to see how the BFs develop over time.
+
+Columns in the dataframe are:
+
+* is = index / total N participants in the trial
+* nsTx1 = n in Tx1 arm
+* dsTx1 = effect size (cohen's d) for Tx1 vs control
+* BFsTx1 = Bayes Factor for Tx1 vs control
+* nsTx2 = n in Tx2 arm
+* dsTx2 = effect size (cohen's d) for Tx2 vs control
+* BFsTx2 = Bayes Factor for Tx2 vs control
+
+#### Exercise task:
+
+See if you can work out what would have happened if you used your chosen trial parameters on this data set. When would you hit a BF boundary for each treatment arm (if at all)? 
+
+# Re-analysis of RCT data
+
+## Symptom Clusters
+
+### Simulate Practice Data
+
+First let us simulate some practice data. The data are based on the items of the Hamilton-Anxiety-Rating Scale.
+
+Initially we determine a sample size:
+
+```{r}
+n = 350 # number of individuals
+```
+
+Then the names of the items:
+
+```{r}
+hama_names = c("Anxious Mood",
+               "Tension",
+               "Fears",
+               "Insomnia",
+               "Concentration and Memory",
+               "Depressed Mood",
+               "General somatic symptoms: muscular",
+               "General somatic symptoms: sensory",
+               "Cardiovascular symptoms",
+               "Respiratory symptoms",
+               "Gastro-intestinal symptoms",
+               "Genito-urinary symptoms",
+               "Other autonomic symptoms")
+```
+
+And finally mean values and standard deviations as well as a plausible covariance structure:
+
+```{r}
+hama_means = c(2.9669421,
+               2.8044077,
+               2.4559229,
+               2.4297521,
+               1.3815427,
+               1.3071625,
+               1.6129477,
+               1.5633609,
+               1.4531680,
+               1.0330579,
+               1.7190083,
+               0.6694215,
+               1.6198347)
+
+hama_sds = c(0.7136179,
+             0.8339568,
+             1.1314254,
+             1.2283532,
+             1.2313786,
+             1.2454069,
+             1.2715661,
+             1.2264810,
+             1.2583008,
+             1.2200659,
+             1.2815280,
+             1.0691029,
+             1.1585213)
+
+hama_cor = read.csv("https://raw.githubusercontent.com/stephangoerigk/DZP_Workshop_Slides/master/hamacor.csv")
+hama_cor = as.matrix(hama_cor[,-1])
+```
+
+Now, let us simulate:
+
+```{r}
+data_cluster = round(
+  faux::rnorm_multi(n = n,
+                    mu = hama_means,
+                    sd = hama_sds,
+                    r = hama_cor,
+                    varnames = hama_names,
+                    empirical = F), 2)
+```
+
+Let us briefly look at the data
+
+```{r}
+psych::describe(data_cluster)
+```
+
+## Response Trajectories
+
+### Simulate Practice Data
+
+
+
+
