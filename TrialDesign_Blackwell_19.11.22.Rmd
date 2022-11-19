@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -25,6 +30,32 @@ You will need to install and load the following packages for these exercises:
 # library(MASS)
 
 #Plus BFDA - see next section
+```
+
+```{r message=FALSE, warning=FALSE}
+# install.packages("ggplot2")
+# install.packages("lme4")
+# install.packages("lmerTest")
+# install.packages("dendextend")
+# install.packages("tidyverse")
+# install.packages("lcmm")
+# install.packages("LCTMtools")
+# install.packages("cowplot")
+# install.packages("emmeans")
+# install.packages("psych")
+# install.packages("BBmisc")
+
+library(ggplot2)
+library(lme4)
+library(lmerTest)
+library(dendextend)
+library(tidyverse)
+library(lcmm)
+library(LCTMtools)
+library(cowplot)
+library(emmeans)
+library(psych)
+library(BBmisc)
 ```
 
 # Trial Design
@@ -133,7 +164,7 @@ plot(sim.H0, n.min=10, n.max=80, boundary=c(1/5, 5), n.trajectories = 60)
 
 1. Play around with the parameters (n.min, n.max, the BF boundaries) and see what happens. e.g. increasing n.min will tend to reduce error rates, but means you lose the chance to make decisions so quickly. Remember that the BF boundaries don't have to be symmetrical (e.g. you could use boundary=c(1/3,10) if you weren't so worried about false-negatives but were very concerned about potential false-positives)
 
-2. Try to come up with a set of parameters that gives you 80% power and a false-positive (type 1) error rate of <5%, i.e. for H1, ≥ 80% stopping at H1 boundary, for H0, < 5% (i.e. 4%) stopping at h1 boundary. 
+2. Try to come up with a set of parameters that gives you 80% power and a false-positive (type 1) error rate of <5%, i.e. for H1, $\geq$ 80% stopping at H1 boundary, for H0, < 5% (i.e. 4%) stopping at h1 boundary. 
 
 3. Once you find this you can see if you can improve on these, to reduce the potential sample sizes needed.
 
@@ -145,7 +176,7 @@ plot(sim.H0, n.min=10, n.max=80, boundary=c(1/5, 5), n.trajectories = 60)
 
 One way to collect this information is into a table, as provided in the examples in Table 2 and Table 3 in the paper by Blackwell et al. (2019) https://journals.sagepub.com/doi/full/10.1177/2167702619858071
 
-Table 2 from the paper is reproduced below. This illustrates a particular set of parameters chosen for a small to medium between-group effect size equivalent to Cohen’s d = 0.4: Nmin = 35 (per arm), Nmax = 125 (per arm), BFfail = 1/4, and a BFsuccess = 5 (and directional default Cauchy prior, rscale parameter = √2/2).
+Table 2 from the paper is reproduced below. This illustrates a particular set of parameters chosen for a small to medium between-group effect size equivalent to Cohen’s d = 0.4: Nmin = 35 (per arm), Nmax = 125 (per arm), BFfail = 1/4, and a BFsuccess = 5 (and directional default Cauchy prior, rscale parameter = sqrt2/2).
 
 Here we can see that we have a false-positive rate of < 5% (top row), and 81% to find d = 0.4. We can also see that 54% of the time, we would hit BFfail at Nmin when d = 0, and 54% of the time we would stop the trial at n = 50 per arm when d = 0.4 (8% at BFfail, 46% at BFsuccess):
 
@@ -286,9 +317,6 @@ seqBFs<-function(BFdata,rs=(sqrt(2)/2)){
           return (paste0("Something went wrong! ",cond))
         })
 }
-
-
-
 ```
 
 You can now use these two functions to explore the effect of doing sequential Bayesian analyses (here for simplicity, t-test on change scores).
@@ -299,7 +327,7 @@ BFsnapshot() can be used to give you a snapshot of the data at a particular poin
 
 * BFdata = the dataframe with the data (i.e. here it is mydata)
 * n = the total sample size / sequence number (up to a max of 300) you want to take the snapshot at (e.g. if you put 100 in here, it will give you a snapshot of the analysis outcomes at the point there were 100 total participants in the trial)
-* rs = you can ignore unless you want to try change the rscale parameter (sets to √2/2 as default)
+* rs = you can ignore unless you want to try change the rscale parameter (sets to sqrt2/2 as default)
 
 e.g. BFsnapshot(mydata,100) would give you analysis output when there are 100 people in the trial
 
@@ -327,7 +355,7 @@ See if you can work out what would have happened if you used your chosen trial p
 
 # Re-analysis of RCT data
 
-## Symptom Clusters
+## Exercise 1: Symptom Clusters
 
 ### Simulate Practice Data
 
@@ -374,6 +402,20 @@ hama_means = c(2.9669421,
                0.6694215,
                1.6198347)
 
+hama_means_post = c(2.9669421-2.3,
+                    2.8044077-2.4,
+                    2.4559229-2.2,
+                    2.4297521-0.8,
+                    1.3815427-0.7,
+                    1.3071625-1.2,
+                    1.6129477-0.5,
+                    1.5633609-0.4,
+                    1.4531680- 0.2,
+                    1.0330579-0.4,
+                    1.7190083-0.1,
+                    0.6694215-0.1,
+                    1.6198347-0.8)
+
 hama_sds = c(0.7136179,
              0.8339568,
              1.1314254,
@@ -395,25 +437,539 @@ hama_cor = as.matrix(hama_cor[,-1])
 Now, let us simulate:
 
 ```{r}
-data_cluster = round(
+# Create baseline data
+set.seed(123)
+data_cluster_bl = round(
   faux::rnorm_multi(n = n,
                     mu = hama_means,
                     sd = hama_sds,
                     r = hama_cor,
                     varnames = hama_names,
                     empirical = F), 2)
+data_cluster_bl$id = row.names(data_cluster_bl)
+data_cluster_bl$time = 0
+
+# Create post-treatment data
+
+data_cluster_post = round(
+  faux::rnorm_multi(n = n,
+                    mu = hama_means_post,
+                    sd = hama_sds,
+                    r = hama_cor,
+                    varnames = hama_names,
+                    empirical = F), 2)
+data_cluster_post$id = row.names(data_cluster_post)
+data_cluster_post$time = 1
 ```
 
-Let us briefly look at the data
+Let us briefly look at the data:
 
 ```{r}
-psych::describe(data_cluster)
+psych::describe(data_cluster_bl)
 ```
 
-## Response Trajectories
+Usually we would go on and create a sum score by adding up all the items:
+
+```{r}
+data_cluster_bl$sum = rowSums(data_cluster_bl[, 1:13])
+data_cluster_post$sum = rowSums(data_cluster_post[, 1:13])
+```
+
+Now let us combine the datasets:
+
+```{r}
+data_cluster = rbind(data_cluster_bl, data_cluster_post)
+```
+
+### Traditional Approach
+
+Plot the data as we usually would using an average group trajectory:
+
+```{r}
+ggplot(data = data_cluster, aes(x = time, y = sum)) +
+  stat_summary(geom = "line", fun = "mean") +
+   stat_summary(geom = "point", fun = "mean") +
+  scale_x_continuous(breaks = c(0,1)) +
+  labs(y = "HAM-A sum", x = "Time") +
+  theme_classic()
+```
+
+Analyze using LMM:
+
+```{r}
+summary(lmer(sum ~ time + (1|id), data = data_cluster))
+```
+
+### Prepare for Clustering
+
+Let us see if we can find some item clusters in the baseline data to get a more differentiated picture:
+
+For this we first need to drop the id, sum, and time columns:
+
+```{r}
+data_cluster_bl = BBmisc::dropNamed(data_cluster_bl, drop = c("time", "id", "sum"))
+data_cluster_post = BBmisc::dropNamed(data_cluster_post, drop = c("time", "id", "sum"))
+```
+
+As a first step, it makes sense to scale the data, as not all item formats are identical in all scales:
+
+```{r}
+data_cluster_bl_s = scale(data_cluster_bl)
+```
+
+Next, we will transpose the data, since we want to cluster items into people and not vice versa:
+
+```{r}
+data_transposed = t(na.omit(data_cluster_bl_s))
+```
+
+Now we will creat a distance matrix to determine the proximity between item responses. The euclidean distance is a commonly used measure for psychometric measures (another one is the manhattan distance).
+
+```{r}
+d = dist(data_transposed, method = "euclidean")
+```
+
+And now, let us cluster the data. We use the `ward.D2` method, this way distances are squared ahead of clustering (no problem with negative data):
+
+```{r}
+clust = hclust(d, method = "ward.D2")
+```
+
+After the clustering is finished we should inspect the result. A common way to look at clustering solutions is the dendrogram:
+
+```{r}
+dend <- as.dendrogram(clust, hang = -1)
+
+labels_cex(dend) = 2
+marg = c(4, 4, 10, 35)
+par(mar = marg, font = 1, cex = 0.4, cex.axis = 1.7, cex.lab = 2)
+plot(rev(dend), horiz = T, edgePar = list(lwd = 2))
+```
+
+The earlier two items merge in the dendrogram, the more similar they were scored by the patients. We now have a good idea, which items belong together. However, now we need to decide how many clusters to retain, i.e. where to "cut" our dendrogram. This step is called pruning.
+
+We will use the `cutreeDynamic()` function from the `dynamicTreeCut` package. It has many advantages over traditional methods (e.g. gap statistic, silhouette method) including that it is more sensitive for detection of distinct classes and more stable in bootstrapping procedures.
+
+The argument `minClusterSize` should be set to 1 and the method should be `"hybrid"`.
+
+```{r}
+pruned = dynamicTreeCut::cutreeDynamic(clust, distM = as.matrix(d), method = "hybrid", minClusterSize = 1)
+
+pruned
+```
+
+The `pruned` object includes our final clustering solution (i.e. which item belongs to which cluster).
+
+We should pass the same names to it, that we used for the items:
+
+```{r}
+names(pruned) = hama_names
+pruned
+```
+
+Now we can plot our pruned dendrogram. We will indicate class membership using colours:
+
+```{r}
+labels_colors(dend) = pruned[c(clust$order)]
+labels_cex(dend) = 2
+marg = c(4, 4, 10, 35)
+par(mar = marg, font = 1, cex = 0.4, cex.axis = 1.7, cex.lab = 2)
+plot(rev(dend), horiz = T, edgePar = list(lwd = 2))
+```
+
+```{r}
+data_cluster_bl$id = row.names(data_cluster_bl)
+data_cluster_bl$time = 0
+data_cluster_post$id = row.names(data_cluster_post)
+data_cluster_post$time = 1
+```
+
+```{r}
+data_cluster_bl$sum_c1 = rowSums(data_cluster_bl[which(pruned == 1)]) / length(which(pruned == 1))
+data_cluster_bl$sum_c2 = rowSums(data_cluster_bl[which(pruned == 2)]) / length(which(pruned == 2))
+data_cluster_bl$sum_c3 = rowSums(data_cluster_bl[which(pruned == 3)]) / length(which(pruned == 3))
+data_cluster_bl$sum_c4 = rowSums(data_cluster_bl[which(pruned == 4)]) / length(which(pruned == 4))
+
+data_cluster_post$sum_c1 = rowSums(data_cluster_post[which(pruned == 1)]) / length(which(pruned == 1))
+data_cluster_post$sum_c2 = rowSums(data_cluster_post[which(pruned == 2)]) / length(which(pruned == 1))
+data_cluster_post$sum_c3 = rowSums(data_cluster_post[which(pruned == 3)]) / length(which(pruned == 1))
+data_cluster_post$sum_c4 = rowSums(data_cluster_post[which(pruned == 4)]) / length(which(pruned == 1))
+```
+
+```{r}
+data_cluster = rbind(data_cluster_bl, data_cluster_post)
+data_cluster_long = multilevel::make.univ(data_cluster, data_cluster[,grep("sum", names(data_cluster))], outname = "Symptoms")
+data_cluster_long = rename(data_cluster_long, Cluster = TIME)
+data_cluster_long$Cluster = data_cluster_long$Cluster +1
+data_cluster_long$Cluster = factor(data_cluster_long$Cluster)
+```
+
+```{r}
+ggplot(data = data_cluster_long, aes(x = time, y = Symptoms, colour = Cluster)) +
+  stat_summary(geom = "line", fun = "mean") +
+   stat_summary(geom = "point", fun = "mean") +
+  scale_x_continuous(breaks = c(0,1)) +
+  labs(y = "Clusterscore", x = "Time") +
+  theme_classic()
+```
+
+Let us model change, but now as a function of cluster:
+
+First let us check the omnibus test:
+
+```{r}
+mod = lmer(Symptoms ~ time * Cluster + (1|id), data = data_cluster_long)
+
+anova(mod)
+```
+
+There is a significant Cluster x Time interaction. Let us probe the interaction effect using pairwise comparisons between the cluster-specific slopes:
+
+```{r}
+emmeans::emtrends(mod, specs = pairwise ~ Cluster, var = "time")
+```
+
+##  Exercise 2: Response Trajectories
 
 ### Simulate Practice Data
 
+```{r}
+n = 350 # number of individuals
+t = 1:10   # number of time periods
 
+df = expand.grid(t = 1:max(t),
+                 id = 1:n)
+df$group = c(rep("active", nrow(df)/2), rep("placebo", nrow(df)/2))
 
+trajectory = c("Linear response",
+               "Deteriorate",
+               "Rev. U-shape",
+               "Rapid response",
+               "No change")
+
+set.seed(123)
+for(ch in unique(df$id)){
+
+  if(df$group[df$id == ch][1] == "active"){
+    df$trajectory[df$id == ch] = rep(sample(trajectory, size = 1, replace = T, prob = c(.5, .05, .2, .2, .05)), max(t))
+  }
+  if(df$group[df$id == ch][1] == "placebo"){
+    df$trajectory[df$id == ch] = rep(sample(trajectory, size = 1, replace = T, prob = c(.2, .2, .1, .05, .45)), max(t))
+  }
+
+  if(df$trajectory[df$id == ch][1] == "No change"){
+    df$y[df$id == ch] = 24 + 0*t  + rnorm(nrow(df[df$id == ch,]), 0, 3)
+  }
+  if(df$trajectory[df$id == ch][1] == "Rev. U-shape"){
+    df$y[df$id == ch] = 24 + 8*t - 0.9*t^2 + rnorm(nrow(df[df$id == ch,]), 0, 3)
+  }
+  if(df$trajectory[df$id == ch][1] == "Linear response"){
+    df$y[df$id == ch] = 24 - 1*t  + rnorm(nrow(df[df$id == ch,]), 0, 3)
+  }
+  if(df$trajectory[df$id == ch][1] == "Deteriorate"){
+    df$y[df$id == ch] = 24 + 2*t  + rnorm(nrow(df[df$id == ch,]), 0, 3)
+  }
+  if(df$trajectory[df$id == ch][1] == "Rapid response"){
+    df$y[df$id == ch] = 24 - 10 * log(t) +  rnorm(nrow(df[df$id == ch,]), 0, 3)
+  }
+}
+```
+
+### Inspect the Data
+
+Plot the data as we usually would (one trajectory per group)
+
+```{r}
+ggplot(data = df, aes(x = t, y = y, colour = group)) +
+  stat_summary(geom = "line", fun = "mean") +
+  stat_summary(geom = "point", fun = "mean") +
+  scale_x_continuous(breaks = t) +
+  coord_cartesian(ylim = c(0,50)) +
+  labs(x = "Time", colour = "Group") +
+  theme_classic()
+```
+
+Analyze using linear mixed model:
+
+```{r message=FALSE, warning=FALSE}
+library(lme4)
+library(lmerTest)
+
+summary(lmer(y ~ t * group + (1|id), data = df))
+```
+
+Plot data on individual change groups (without the mixture model, we usually do not know these in advance):
+
+```{r}
+ggplot(data = df, aes(x = t, y = y, colour = trajectory)) +
+  geom_point() +
+  scale_x_continuous(breaks = t) +
+  coord_cartesian(ylim = c(0,50)) +
+  facet_grid(cols = vars(trajectory), rows = vars(group)) +
+  labs(colour = "trajectory", x = "Time") +
+  theme_classic()
+```
+
+### Create LCLMM
+
+To identify reasonable grouping categories for these individually improving patients, we need to build a latent model.
+
+Let us compute a growth mixtue model aka. latent class linear mixed models (LCLMM). We use the package `lcmm` for this.
+
+* The `fixed` argument is a formula, as we know it from mixed models. We determine a polynomial here (usually quadratic or cubic as this is how most symptoms have been shown to change).
+
+* The `mixture` argument specifies class-specific fixed effects. These are the change parameters the trajectories are defined on
+
+* The `mixture` argument specifies a random argument as in the LMM. May be `~ 1` for random intercepts or `1 + t` for random intercepts and slopes.
+
+* The `ng` argument specifies the number of classes to be extracted. We will learn in a second how the optimal number of classes can be determined.
+
+* The `subject` argument specifies the nesting structure due to the repeated measurements.
+
+```{r}
+library(lcmm)
+library(LCTMtools)
+
+mi = lcmm::hlme(fixed = y ~ 1 + t + I(t^2),
+           mixture = ~ 1 + t + I(t^2),
+           random = ~ 1,
+           ng = 5,
+           data = df,
+           subject = "id")
+```
+
+### Inspect the LCLMM Model
+
+Let us check the mixture object `mi`:
+
+```{r}
+mi
+```
+
+We can see an overview over our selected parameters and that the model has converged fine. We also get a selection of goodness-of-fit statistics, that we could use for model selection.
+
+We can inspect the model further: The `LCTMtoolkit()` function gives us a convenient print out for the quality of our model and also displays some benchmark for orientation
+
+```{r}
+LCTMtoolkit_total = LCTMtoolkit(mi)
+```
+
+The `postprob()` function displays posterior classifications (i.e. group membership frequencies) for all extracted classes.
+
+Often we want to define a minimum cutoff for clinical relevance (e.g. min. 5% capture of all patients):
+
+```{r}
+postprob_total = lcmm::postprob(mi)
+```
+
+### Plot LCLMM Model Predictions
+
+Create custom function for LCLMM plotting:
+
+```{r}
+plot_traj = function(mi, data, var.time){
+  datnew   <- data.frame(t = seq(0, max(data[, var.time]), length = 100))
+  plotpred <- lcmm::predictY(mi, datnew, var.time = var.time, draws = TRUE)
+
+  frame_traj = as.data.frame(expand.grid(Time = plotpred$times$t,
+                                         trajectory = unique(mi$pprob$class),
+                                         pred = NA,
+                                         upper = NA,
+                                         lower = NA))
+
+  for(traj in unique(frame_traj$trajectory)){
+    for(i in 1:100){
+      frame_traj$pred[frame_traj$trajectory == traj][i] = plotpred$pred[,which(grepl(paste0("^Ypred_class", as.character(traj)), colnames(plotpred$pred)))][i]
+      frame_traj$upper[frame_traj$trajectory == traj][i] = plotpred$pred[,which(grepl(paste0("^lower.Ypred_class", as.character(traj)), colnames(plotpred$pred)))][i]
+      frame_traj$lower[frame_traj$trajectory == traj][i] = plotpred$pred[,which(grepl(paste0("^upper.Ypred_class", as.character(traj)), colnames(plotpred$pred)))][i]
+    }
+  }
+  frame_traj$trajectory = factor(frame_traj$trajectory)
+  return(ggplot(data = frame_traj, aes(x = Time, y = pred, ymin = lower, ymax = upper)) +
+    # geom_vline(xintercept = c(5, 10, 14, 17), linetype = "dotted") +
+    geom_line(aes(colour = trajectory)) +
+      labs(y = "Predicted") +
+    geom_ribbon(aes(fill = trajectory), alpha = .2, linetype = "dotted") +
+    theme_classic())
+}
+```
+
+Plot the result:
+
+```{r}
+plot_traj(mi, df, "t")
+```
+
+Let us check the graph next to the empirical data:
+
+```{r}
+cowplot::plot_grid(ggplot(data = df, aes(x = t, y = y, colour = trajectory)) +
+                     geom_point() +
+                     scale_x_continuous(breaks = t) +
+                     coord_cartesian(ylim = c(0,50)) +
+                     facet_grid(cols = vars(trajectory), rows = vars(group)) +
+                     labs(colour = "Trajectory", x = "Time") +
+                     theme_classic(),
+                   plot_traj(mi, df, "t"), nrow = 2)
+```
+
+### Transfer class membership to original dataset
+
+Now we should transfer the determined class to our empirical dataset. Otherwise, we will not be able to run models using the trajectories. 
+
+In addition, we extract the certainty, that each person was classified to a category with (the `pprob` variable in the `mi` object). Using these probability values we can weigh later models for categorization uncertainty.
+
+Create custom function for transfer:
+
+```{r}
+transfer_class = function(data, mi){
+  data$class = NA
+  for(ch in unique(data$id)){
+    data$class[data$id == ch] = mi$pprob$class[mi$pprob$id == ch]
+    data$weight[data$id == ch] = mi$pprob[mi$pprob$id == ch, which(grepl(paste0("prob", as.character(mi$pprob$class[mi$pprob$id == ch])), colnames(mi$pprob)))]
+  }
+  data$class = factor(data$class)
+  return(data)
+}
+```
+
+Transfer data to our original dataframe `df`:
+
+```{r}
+df = transfer_class(data = df, mi = mi)
+```
+
+Create data in wide format:
+
+```{r}
+df_wide = as.data.frame(df %>%
+  pivot_wider(names_from = t, values_from = y))
+
+levels(df_wide$class) = c( "Rapid response",
+                      "Linear response",
+                      "No change",
+                      "Rev. U-shape",
+                      "Deteriorate")
+```
+
+### Modeling class membership as dependent variable
+
+We can check the dispersion of the trajectory class variable within the 2 treatment groups using `table()`:
+
+```{r}
+table(df_wide$class, df_wide$group)
+```
+
+If we want to use trajectory class membership as the dependent variable, we need to used a logistic-regression model (because `class` is a categorical variable). Since we usually have more than 2 trajectory classes, we will use a multinomial logistic-regression model.
+
+```{r}
+multinom = nnet::multinom(class ~ group, data = df_wide, weights = weight)
+```
+
+For an omnibus test, we can use a chi-square-likelihood-ratio test:
+
+```{r}
+car::Anova(multinom)
+```
+
+For pairwise comparisons we can use the `emmeans` package:
+
+```{r}
+emmeans::lsmeans(multinom, pairwise ~ group | class, adjust="tukey", mode = "prob")
+```
+
+Estimates are displayed as log-odds, so we have to exponentiate them using `exp()` to get interpretable odds ratios (OR).
+
+### Determine the optimal model
+
+In the previous dataset, we have 
+
+1. used a qudratic polynomial
+2. extracted 5 groups 
+3. allowed free variation of the intercept as the random effect.
+
+However, usually we operate on a more data-driven approach, i.e. without knowing these parameters in advance.
+
+There are several statistical criteria to determine a mode that optimally describes the data. For LCLMM, the most commonly used ones are:
+
+* Bayesian Information Criterion (BIC)
+  * lower values on these information criteria indicate better fitting models
+  * models that do not fit better than the baseline model can be dismissed, and a selection of the best fitting models can be carried forward and examined further
+* Entropy
+  * ranges from 0.00 to 1.00
+  * high values of entropy (> .80) indicate that individuals are classified with confidence
+  * models with higher entropy are favored 
+* Adjusted Lo-Mendell-Rubin likelihood ratio test 
+  * corrected likelihood-ratio distribution (a chi-square distribution is inappropriate) to compare models with C and C – 1 unobserved groups
+  * likelihood ratio tests compare models that differ only in the number of classes
+  * significance test (p< .05) indicates that the model with C – 1 classes should be rejected in favor of the model with C classes
+
+### Selection loop
+
+To try this, let us run a model selection based on the Bayesian Information Criterion (BIC).
+
+Since we have to test a lot of parameters, we run the model fitting procedure in a loop and save the results in a container:
+
+This procedure can take quite a while, so we'll test it in a smaller dataset:
+
+```{r}
+test = read.csv("https://raw.githubusercontent.com/stephangoerigk/DZP_Workshop_Slides/master/test.csv")
+```
+
+Inspect the data:
+
+```{r}
+psych::describe(test)
+
+head(test)
+```
+
+Let us first set up a container:
+
+```{r}
+results_total = data.frame(ng = NA,
+                           Polynomial = NA,
+                           Random = NA,
+                           BIC = NA,
+                           AIC = NA,
+                           loglik = NA)
+```
+
+We will run out loop for 2:5 groups,quadratic vs. cubic polynomial and different random effect compositions:
+
+```{r eval=FALSE}
+set.seed(222)
+
+for(ng in 2:5){
+  for(random in c("~ 1", "~ 1 + t")){
+    mi_sq <- lcmm::hlme(fixed = stress ~ 1 + t + I(t^2),
+                        mixture = ~ 1 + t + I(t^2),
+                        random = as.formula(random),
+                        ng = ng,
+                        nwg = FALSE,
+                        idiag = FALSE,
+                        data = test,
+                        subject = "id")
+    mi_cub <- lcmm::hlme(fixed = stress ~ 1 + t + I(t^3),
+                         mixture = ~ 1 + t + I(t^3),
+                         random = as.formula(random),
+                         ng = ng,
+                         nwg = FALSE,
+                         idiag = FALSE,
+                         data = test,
+                         subject = "id")
+
+    sq <- c(mi_sq$ng, 2, random, mi_sq$BIC, mi_sq$AIC, mi_sq$loglik)
+    cub <- c(mi_cub$ng, 3, random, mi_cub$BIC, mi_cub$AIC, mi_cub$loglik)
+    results_total = rbind(results_total, sq)
+    results_total = rbind(results_total, cub)
+  }
+}
+
+results_total = results_total[order(results_total$BIC, decreasing = T),]
+```
+
+The solution with the lowest BIC is chosen. Now we can once more fit the LCLMM, only now we used the determined parameters
+
+CAVE: While a statistical determination of model parameters is important, there should always be clinical plausibility checks as well.
 

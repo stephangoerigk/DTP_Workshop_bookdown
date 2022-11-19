@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitel 2 Trial Design | Einführung in R</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitel 2 Trial Design | Einführung in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitel 2 Trial Design | Einführung in R" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Stephan Goerigk" />
+
+
+<meta name="date" content="2022-11-19" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="packages.html"/>
+<link rel="next" href="re-analysis-of-rct-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DZP Methods Workshop</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="packages.html"><a href="packages.html"><i class="fa fa-check"></i><b>1</b> Packages</a></li>
+<li class="chapter" data-level="2" data-path="trial-design.html"><a href="trial-design.html"><i class="fa fa-check"></i><b>2</b> Trial Design</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="trial-design.html"><a href="trial-design.html#exercise-1-simulating-data-using-bfda-and-selecting-trial-parameters"><i class="fa fa-check"></i><b>2.1</b> Exercise 1: Simulating data using BFDA and selecting trial parameters</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="trial-design.html"><a href="trial-design.html#simulate-sequential-analyses-for-planning"><i class="fa fa-check"></i><b>2.1.1</b> Simulate sequential analyses for planning</a></li>
+<li class="chapter" data-level="2.1.2" data-path="trial-design.html"><a href="trial-design.html#try-out-different-analysis-parameters-to-find-a-set-that-fits-your-requirements"><i class="fa fa-check"></i><b>2.1.2</b> Try out different analysis parameters to find a set that fits your requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="trial-design.html"><a href="trial-design.html#exercise-2-carry-out-sequential-analysis-of-simulated-trial-data"><i class="fa fa-check"></i><b>2.2</b> Exercise 2: Carry out sequential analysis of (simulated) trial data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="trial-design.html"><a href="trial-design.html#overview-and-setup"><i class="fa fa-check"></i><b>2.2.1</b> Overview and setup</a></li>
+<li class="chapter" data-level="2.2.2" data-path="trial-design.html"><a href="trial-design.html#exploring-the-data"><i class="fa fa-check"></i><b>2.2.2</b> Exploring the data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html"><i class="fa fa-check"></i><b>3</b> Re-analysis of RCT data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#exercise-1-symptom-clusters"><i class="fa fa-check"></i><b>3.1</b> Exercise 1: Symptom Clusters</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#simulate-practice-data"><i class="fa fa-check"></i><b>3.1.1</b> Simulate Practice Data</a></li>
+<li class="chapter" data-level="3.1.2" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#traditional-approach"><i class="fa fa-check"></i><b>3.1.2</b> Traditional Approach</a></li>
+<li class="chapter" data-level="3.1.3" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#prepare-for-clustering"><i class="fa fa-check"></i><b>3.1.3</b> Prepare for Clustering</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#exercise-2-response-trajectories"><i class="fa fa-check"></i><b>3.2</b> Exercise 2: Response Trajectories</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#simulate-practice-data-1"><i class="fa fa-check"></i><b>3.2.1</b> Simulate Practice Data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#inspect-the-data"><i class="fa fa-check"></i><b>3.2.2</b> Inspect the Data</a></li>
+<li class="chapter" data-level="3.2.3" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#create-lclmm"><i class="fa fa-check"></i><b>3.2.3</b> Create LCLMM</a></li>
+<li class="chapter" data-level="3.2.4" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#inspect-the-lclmm-model"><i class="fa fa-check"></i><b>3.2.4</b> Inspect the LCLMM Model</a></li>
+<li class="chapter" data-level="3.2.5" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#plot-lclmm-model-predictions"><i class="fa fa-check"></i><b>3.2.5</b> Plot LCLMM Model Predictions</a></li>
+<li class="chapter" data-level="3.2.6" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#transfer-class-membership-to-original-dataset"><i class="fa fa-check"></i><b>3.2.6</b> Transfer class membership to original dataset</a></li>
+<li class="chapter" data-level="3.2.7" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#modeling-class-membership-as-dependent-variable"><i class="fa fa-check"></i><b>3.2.7</b> Modeling class membership as dependent variable</a></li>
+<li class="chapter" data-level="3.2.8" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#determine-the-optimal-model"><i class="fa fa-check"></i><b>3.2.8</b> Determine the optimal model</a></li>
+<li class="chapter" data-level="3.2.9" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#selection-loop"><i class="fa fa-check"></i><b>3.2.9</b> Selection loop</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Einführung in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="trial-design" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Kapitel 2</span> Trial Design<a href="trial-design.html#trial-design" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="exercise-1-simulating-data-using-bfda-and-selecting-trial-parameters" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Exercise 1: Simulating data using BFDA and selecting trial parameters<a href="trial-design.html#exercise-1-simulating-data-using-bfda-and-selecting-trial-parameters" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The Bayes factor design analysis (BFDA) package provides a simple way to simulate and analyse sequential bayesian analyses for trial planning. For more complex analyses you can create your own custom simulations (e.g. see the scripts at <a href="https://osf.io/8mxda/" class="uri">https://osf.io/8mxda/</a> for example)</p>
+<p>Please see <a href="https://rawgit.com/nicebread/BFDA/master/package/doc/BFDA_manual.html" class="uri">https://rawgit.com/nicebread/BFDA/master/package/doc/BFDA_manual.html</a> for the BFDA manual and full instructions</p>
+<div id="simulate-sequential-analyses-for-planning" class="section level3 hasAnchor" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Simulate sequential analyses for planning<a href="trial-design.html#simulate-sequential-analyses-for-planning" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A first step is to simulate the results of sequential analyses under i) the alternative hypothesis for the target effect size of interest (to find parameters that give you sufficient power), and ii) the null hypothesis (to find parameters that give a suitable false-positive (Type 1) error rate). Once you have suitable parameters for these, you can then simulate a range of other effect sizes to get a better picture of your power at different effect sizes.</p>
+<p>As simulations can take some time, for demonstration purposes in this exercise we will i) attempt to find a medium effect size (d = 0.5), as this requires smaller maximum sample sizes, and ii) only do a small number of simulations (500), as we are not too worried about accuracy/precision - for planning an actual trial you would want to do a larger number (e.g. 10,000)</p>
+<p>Please run the following simulations as preparation:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="trial-design.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19112022</span>)</span>
+<span id="cb3-2"><a href="trial-design.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="trial-design.html#cb3-3" aria-hidden="true" tabindex="-1"></a>sim.H1 <span class="ot">&lt;-</span> <span class="fu">BFDA.sim</span>(<span class="at">expected.ES=</span><span class="fl">0.5</span>, <span class="at">type=</span><span class="st">&quot;t.between&quot;</span>,<span class="at">prior=</span><span class="fu">list</span>(<span class="st">&quot;Cauchy&quot;</span>,<span class="fu">list</span>(<span class="at">prior.location=</span><span class="dv">0</span>, <span class="at">prior.scale=</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)), <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">alternative=</span><span class="st">&quot;greater&quot;</span>, <span class="at">boundary=</span><span class="cn">Inf</span>, <span class="at">B=</span><span class="dv">500</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>, <span class="at">stepsize =</span> <span class="dv">5</span>)</span>
+<span id="cb3-4"><a href="trial-design.html#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="trial-design.html#cb3-5" aria-hidden="true" tabindex="-1"></a>sim.H0 <span class="ot">&lt;-</span> <span class="fu">BFDA.sim</span>(<span class="at">expected.ES=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;t.between&quot;</span>, <span class="at">prior=</span><span class="fu">list</span>(<span class="st">&quot;Cauchy&quot;</span>, <span class="fu">list</span>(<span class="at">prior.location=</span><span class="dv">0</span>, <span class="at">prior.scale=</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)), <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">alternative=</span><span class="st">&quot;greater&quot;</span>, <span class="at">boundary=</span><span class="cn">Inf</span>, <span class="at">B=</span><span class="dv">500</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>, <span class="at">stepsize =</span> <span class="dv">5</span>)</span>
+<span id="cb3-6"><a href="trial-design.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="trial-design.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#if you notice these have finished and you have time you could also run some in-between or larger values, e.g.</span></span>
+<span id="cb3-8"><a href="trial-design.html#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="trial-design.html#cb3-9" aria-hidden="true" tabindex="-1"></a>sim.H0<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">BFDA.sim</span>(<span class="at">expected.ES=</span><span class="fl">0.2</span>, <span class="at">type=</span><span class="st">&quot;t.between&quot;</span>, <span class="at">prior=</span><span class="fu">list</span>(<span class="st">&quot;Cauchy&quot;</span>, <span class="fu">list</span>(<span class="at">prior.location=</span><span class="dv">0</span>, <span class="at">prior.scale=</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)), <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">alternative=</span><span class="st">&quot;greater&quot;</span>, <span class="at">boundary=</span><span class="cn">Inf</span>, <span class="at">B=</span><span class="dv">500</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>, <span class="at">stepsize =</span> <span class="dv">5</span>)</span>
+<span id="cb3-10"><a href="trial-design.html#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="trial-design.html#cb3-11" aria-hidden="true" tabindex="-1"></a>sim.H0<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">BFDA.sim</span>(<span class="at">expected.ES=</span><span class="fl">0.4</span>, <span class="at">type=</span><span class="st">&quot;t.between&quot;</span>, <span class="at">prior=</span><span class="fu">list</span>(<span class="st">&quot;Cauchy&quot;</span>, <span class="fu">list</span>(<span class="at">prior.location=</span><span class="dv">0</span>, <span class="at">prior.scale=</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)), <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">alternative=</span><span class="st">&quot;greater&quot;</span>, <span class="at">boundary=</span><span class="cn">Inf</span>, <span class="at">B=</span><span class="dv">500</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>, <span class="at">stepsize =</span> <span class="dv">5</span>)</span>
+<span id="cb3-12"><a href="trial-design.html#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="trial-design.html#cb3-13" aria-hidden="true" tabindex="-1"></a>sim.H0<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">BFDA.sim</span>(<span class="at">expected.ES=</span><span class="fl">0.6</span>, <span class="at">type=</span><span class="st">&quot;t.between&quot;</span>, <span class="at">prior=</span><span class="fu">list</span>(<span class="st">&quot;Cauchy&quot;</span>, <span class="fu">list</span>(<span class="at">prior.location=</span><span class="dv">0</span>, <span class="at">prior.scale=</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)), <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">alternative=</span><span class="st">&quot;greater&quot;</span>, <span class="at">boundary=</span><span class="cn">Inf</span>, <span class="at">B=</span><span class="dv">500</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>, <span class="at">stepsize =</span> <span class="dv">5</span>)</span>
+<span id="cb3-14"><a href="trial-design.html#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="trial-design.html#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#etc...</span></span></code></pre></div>
+<p>As an explanation, these simulate sequential Bayes-factor based analyses based on:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Effect size of d = 0.5 (expected.ES=0.5) for sim.H1, or d=0 for sim.H0</p></li>
+<li><p>a between-group t-test, e.g. difference between two groups in change in symptoms (type=“t.between”)</p></li>
+<li><p>use a default Cauchy prior with a rscale value of 0.707 (prior=list(“Cauchy”, list(prior.location=0, prior.scale=sqrt(2)/2))) [we can’t go into priors today but default ones like this work fine! See Stefan et al. (2019) for discussion of using informed priors with BFDA, <a href="https://link.springer.com/article/10.3758/s13428-018-01189-8" class="uri">https://link.springer.com/article/10.3758/s13428-018-01189-8</a>]</p></li>
+<li><p>a minimum sample size (per arm) of 10 (n.min = 10) - note that when trying to find parameters later you can choose higher minimum sample sizes, but not lower</p></li>
+<li><p>a maximum sample size (per arm) of 80 (n.max = 80) - note that when trying out parameters later on you can try lower, but not higher maximum sample sizes</p></li>
+<li><p>a directional (i.e. one-tailed) Bayes Factor (alternative = “greater” and boundary = Inf). We are interested in whether one treatment is superior to another, not whether it is different.</p></li>
+<li><p>we use 500 simulations (B = 500) - fine for getting a feel, but for finalising your study design you would want a larger number e.g. 10,000</p></li>
+<li><p>we carry out the analysis every 5 participants (stepsize = 5). You can repeat the analysis every 1 participant, but this simply takes longer to simulate so we don’t do this here.</p></li>
+</ol>
+<p>If you were carrying out large important simulations that took a long time you would probably want to save them so that you can load them again later without having to re-run the simulations:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="trial-design.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Saving a BFDA simulation object:</span></span>
+<span id="cb4-2"><a href="trial-design.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(sim.H1,<span class="st">&quot;sim.H1.d0.5.dd.mm.yy.RDS&quot;</span>)</span>
+<span id="cb4-3"><a href="trial-design.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(sim.H0,<span class="st">&quot;sim.H1.d0.0.dd.mm.yy.RDS&quot;</span>)</span>
+<span id="cb4-4"><a href="trial-design.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#to load again</span></span>
+<span id="cb4-5"><a href="trial-design.html#cb4-5" aria-hidden="true" tabindex="-1"></a>sim.H1<span class="ot">&lt;-</span><span class="fu">readRDS</span>(<span class="st">&quot;sim.H1.d0.5.dd.mm.yy.RDS&quot;</span>)</span>
+<span id="cb4-6"><a href="trial-design.html#cb4-6" aria-hidden="true" tabindex="-1"></a>sim.H0<span class="ot">&lt;-</span><span class="fu">readRDS</span>(<span class="st">&quot;sim.H1.d0.0.dd.mm.yy.RDS&quot;</span>)</span></code></pre></div>
+</div>
+<div id="try-out-different-analysis-parameters-to-find-a-set-that-fits-your-requirements" class="section level3 hasAnchor" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Try out different analysis parameters to find a set that fits your requirements<a href="trial-design.html#try-out-different-analysis-parameters-to-find-a-set-that-fits-your-requirements" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="overview" class="section level4 hasAnchor" number="2.1.2.1">
+<h4><span class="header-section-number">2.1.2.1</span> Overview<a href="trial-design.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Now that you have a simulated set of sequential BFs you can test out what would happen if you applied different sets of analysis parameters to them.</p>
+<p>These are:</p>
+<ul>
+<li><p>Nmin: The minimum sample size (per arm) at which you start the sequential analyses</p></li>
+<li><p>Nmax: The maximum sample size (per arm) at which you drop an arm (if it has not already hit a BF boundary)</p></li>
+<li><p>BFfail: A BF threshold for failure (i.e. sufficient evidence for the null hypothesis of non-superiority to the control condition vs. the alternative hypothesis of superiority). This will be a value less than 1 (e.g. 1/3, 1/5, 1/10 etc)</p></li>
+<li><p>BFsuccess: A BF threshold for success (i.e. sufficient evidence for the alternative hypothesis of superiority over the control condition vs.the null hypothesis of non-superiority to the control condition ). This will be a value greater than 1 (e.g. 3, 5, 10)</p></li>
+</ul>
+<p>We are interested in:</p>
+<ol style="list-style-type: lower-roman">
+<li><p>power: what proportion of arms hit the BFsuccess threshold when d &gt; 0</p></li>
+<li><p>false-positive / Type 1 error rate: what proportion of arms hit BF success threshold when d = 0 (or d &lt; 0)</p></li>
+<li><p>keeping the average sample sizes as low as possible</p></li>
+</ol>
+<p>There are several functions in BFDA to analyse simulation outcomes, but here we will just use the plot function. We will start by using the boundary conditions of the simulations (i.e. n.min = 10 and n.max = 80), and a default set of starting boundaries of BFfail = 1/5 and BFsuccess = 5 (boundary=c(1/5, 5)). The parameter n.trajectories just tells it how many lines to draw on the graph (representing individual BF trajectories)</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="trial-design.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First plot for H1</span></span>
+<span id="cb5-2"><a href="trial-design.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.new</span>() <span class="co">#sometimes the plot doesn&#39;t work if you don&#39;t make a new window first</span></span>
+<span id="cb5-3"><a href="trial-design.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim.H1, <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">boundary=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="dv">5</span>), <span class="at">n.trajectories =</span> <span class="dv">60</span>)</span>
+<span id="cb5-4"><a href="trial-design.html#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="trial-design.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Then plot for H0</span></span>
+<span id="cb5-6"><a href="trial-design.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.new</span>() <span class="co">#sometimes the plot doesn&#39;t work if you don&#39;t make a new window first</span></span>
+<span id="cb5-7"><a href="trial-design.html#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim.H0, <span class="at">n.min=</span><span class="dv">10</span>, <span class="at">n.max=</span><span class="dv">80</span>, <span class="at">boundary=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="dv">5</span>), <span class="at">n.trajectories =</span> <span class="dv">60</span>)</span>
+<span id="cb5-8"><a href="trial-design.html#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="trial-design.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#There are other functions in BFDA to explore the simulations/sequential analyses but I find the plots the most informative. However, feel free to explore.</span></span></code></pre></div>
+</div>
+<div id="exercise-steps" class="section level4 hasAnchor" number="2.1.2.2">
+<h4><span class="header-section-number">2.1.2.2</span> Exercise steps<a href="trial-design.html#exercise-steps" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ol style="list-style-type: decimal">
+<li><p>Play around with the parameters (n.min, n.max, the BF boundaries) and see what happens. e.g. increasing n.min will tend to reduce error rates, but means you lose the chance to make decisions so quickly. Remember that the BF boundaries don’t have to be symmetrical (e.g. you could use boundary=c(1/3,10) if you weren’t so worried about false-negatives but were very concerned about potential false-positives)</p></li>
+<li><p>Try to come up with a set of parameters that gives you 80% power and a false-positive (type 1) error rate of &lt;5%, i.e. for H1, <span class="math inline">\(\geq\)</span> 80% stopping at H1 boundary, for H0, &lt; 5% (i.e. 4%) stopping at h1 boundary.</p></li>
+<li><p>Once you find this you can see if you can improve on these, to reduce the potential sample sizes needed.</p></li>
+<li><p>See what proportion of participants will hit BFsuccess (H1 boundary) for sim.H1 at different sample sizes (by adjusting n.max): the value for which 50% are stopping at the nmax boundary tells you the average sample size you might expect if d=0.5 with these parameters. You can then do the same for sim.H0. It might be that you can find a set of parameters that give you smaller average sample size predictions.</p></li>
+<li><p>If you have simulated other effect sizes you can see what happens for these, e.g. what if you power for d=0.5, but d=0.4?</p></li>
+</ol>
+</div>
+<div id="summarising-the-simulations-for-planning" class="section level4 hasAnchor" number="2.1.2.3">
+<h4><span class="header-section-number">2.1.2.3</span> Summarising the simulations for planning<a href="trial-design.html#summarising-the-simulations-for-planning" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>One way to collect this information is into a table, as provided in the examples in Table 2 and Table 3 in the paper by Blackwell et al. (2019) <a href="https://journals.sagepub.com/doi/full/10.1177/2167702619858071" class="uri">https://journals.sagepub.com/doi/full/10.1177/2167702619858071</a></p>
+<p>Table 2 from the paper is reproduced below. This illustrates a particular set of parameters chosen for a small to medium between-group effect size equivalent to Cohen’s d = 0.4: Nmin = 35 (per arm), Nmax = 125 (per arm), BFfail = 1/4, and a BFsuccess = 5 (and directional default Cauchy prior, rscale parameter = sqrt2/2).</p>
+<p>Here we can see that we have a false-positive rate of &lt; 5% (top row), and 81% to find d = 0.4. We can also see that 54% of the time, we would hit BFfail at Nmin when d = 0, and 54% of the time we would stop the trial at n = 50 per arm when d = 0.4 (8% at BFfail, 46% at BFsuccess):</p>
+<br>
+<table>
+<thead style="background-color: lightgray; border: 1px solid black;">
+<tr>
+<th data-xml-align="left" rowspan="3">
+“True” effect size (Cohen’s <i>d</i>)
+</th>
+<th data-xml-align="center" colspan="10">
+<span>Probability of reaching threshold at each participant number (per group)</span>
+</th>
+</tr>
+<tr data-xml-align="center">
+<th colspan="5">
+<span>Discontinuation threshold</span>
+</th>
+<th colspan="5">
+<span>Replacement threshold</span>
+</th>
+</tr>
+<tr data-xml-align="center">
+<th>
+<i>n</i> = 35
+</th>
+<th>
+<i>n</i> = 50
+</th>
+<th>
+<i>n</i> = 75
+</th>
+<th>
+<i>n</i> = 100
+</th>
+<th>
+<i>n</i> = 125
+</th>
+<th>
+<i>n</i> = 35
+</th>
+<th>
+<i>n</i> = 50
+</th>
+<th>
+<i>n</i> = 75
+</th>
+<th>
+<i>n</i> = 100
+</th>
+<th>
+<i>n</i> = 125
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-xml-align="left">
+0 (null)
+</td>
+<td data-xml-align="center">
+54
+</td>
+<td data-xml-align="center">
+70
+</td>
+<td data-xml-align="center">
+81
+</td>
+<td data-xml-align="center">
+86
+</td>
+<td data-xml-align="center">
+89
+</td>
+<td data-xml-align="center">
+<b>1</b>
+</td>
+<td data-xml-align="center">
+<b>3</b>
+</td>
+<td data-xml-align="center">
+<b>3</b>
+</td>
+<td data-xml-align="center">
+<b>4</b>
+</td>
+<td data-xml-align="center">
+<b>4</b>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.1
+</td>
+<td data-xml-align="center">
+37
+</td>
+<td data-xml-align="center">
+52
+</td>
+<td data-xml-align="center">
+62
+</td>
+<td data-xml-align="center">
+68
+</td>
+<td data-xml-align="center">
+71
+</td>
+<td data-xml-align="center">
+4
+</td>
+<td data-xml-align="center">
+7
+</td>
+<td data-xml-align="center">
+10
+</td>
+<td data-xml-align="center">
+12
+</td>
+<td data-xml-align="center">
+<i>13</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.2
+</td>
+<td data-xml-align="center">
+22
+</td>
+<td data-xml-align="center">
+33
+</td>
+<td data-xml-align="center">
+41
+</td>
+<td data-xml-align="center">
+45
+</td>
+<td data-xml-align="center">
+47
+</td>
+<td data-xml-align="center">
+8
+</td>
+<td data-xml-align="center">
+15
+</td>
+<td data-xml-align="center">
+23
+</td>
+<td data-xml-align="center">
+28
+</td>
+<td data-xml-align="center">
+<i>32</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.3
+</td>
+<td data-xml-align="center">
+11
+</td>
+<td data-xml-align="center">
+18
+</td>
+<td data-xml-align="center">
+22
+</td>
+<td data-xml-align="center">
+24
+</td>
+<td data-xml-align="center">
+25
+</td>
+<td data-xml-align="center">
+16
+</td>
+<td data-xml-align="center">
+29
+</td>
+<td data-xml-align="center">
+43
+</td>
+<td data-xml-align="center">
+52
+</td>
+<td data-xml-align="center">
+<i>58</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.4
+</td>
+<td data-xml-align="center">
+5
+</td>
+<td data-xml-align="center">
+8
+</td>
+<td data-xml-align="center">
+10
+</td>
+<td data-xml-align="center">
+10
+</td>
+<td data-xml-align="center">
+11
+</td>
+<td data-xml-align="center">
+28
+</td>
+<td data-xml-align="center">
+46
+</td>
+<td data-xml-align="center">
+65
+</td>
+<td data-xml-align="center">
+75
+</td>
+<td data-xml-align="center">
+<i>81</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.5
+</td>
+<td data-xml-align="center">
+2
+</td>
+<td data-xml-align="center">
+3
+</td>
+<td data-xml-align="center">
+4
+</td>
+<td data-xml-align="center">
+4
+</td>
+<td data-xml-align="center">
+4
+</td>
+<td data-xml-align="center">
+43
+</td>
+<td data-xml-align="center">
+64
+</td>
+<td data-xml-align="center">
+82
+</td>
+<td data-xml-align="center">
+91
+</td>
+<td data-xml-align="center">
+<i>94</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.6
+</td>
+<td data-xml-align="center">
+1
+</td>
+<td data-xml-align="center">
+1
+</td>
+<td data-xml-align="center">
+1
+</td>
+<td data-xml-align="center">
+1
+</td>
+<td data-xml-align="center">
+1
+</td>
+<td data-xml-align="center">
+60
+</td>
+<td data-xml-align="center">
+80
+</td>
+<td data-xml-align="center">
+94
+</td>
+<td data-xml-align="center">
+97
+</td>
+<td data-xml-align="center">
+<i>98</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.7
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+75
+</td>
+<td data-xml-align="center">
+91
+</td>
+<td data-xml-align="center">
+98
+</td>
+<td data-xml-align="center">
+100
+</td>
+<td data-xml-align="center">
+<i>100</i>
+</td>
+</tr>
+<tr>
+<td data-xml-align="left">
+0.8
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+0
+</td>
+<td data-xml-align="center">
+88
+</td>
+<td data-xml-align="center">
+97
+</td>
+<td data-xml-align="center">
+100
+</td>
+<td data-xml-align="center">
+100
+</td>
+<td data-xml-align="center">
+<i>100</i>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br><br></p>
+<p>Doing these plots is quite a long-winded way to arrive at such a table, but it at least gives you a good feel for what happens when you change the parameters. If you were doing your own simulations you could write a script to output a table automatically (e.g. see the scripts at <a href="https://osf.io/8mxda/" class="uri">https://osf.io/8mxda/</a> for example)</p>
+</div>
+</div>
+</div>
+<div id="exercise-2-carry-out-sequential-analysis-of-simulated-trial-data" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Exercise 2: Carry out sequential analysis of (simulated) trial data<a href="trial-design.html#exercise-2-carry-out-sequential-analysis-of-simulated-trial-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="overview-and-setup" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Overview and setup<a href="trial-design.html#overview-and-setup" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this exercise you will analyse some (simulated) data using the trial parameters you selected, and find out when you hit the BF boundaries.</p>
+<p>First you will need to simulate the trial data - please run the code below (which I’m happy to explain but there’s no need to understand it for the exercise - it’s just a means to provide you with the data to analyse):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="trial-design.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulates 100 participants in each arm of trial where:</span></span>
+<span id="cb6-2"><a href="trial-design.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#There is a correlation of r = 0.35 between pre and post-data</span></span>
+<span id="cb6-3"><a href="trial-design.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#One arm is not superior to control, the other is</span></span>
+<span id="cb6-4"><a href="trial-design.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19112022</span>)</span>
+<span id="cb6-5"><a href="trial-design.html#cb6-5" aria-hidden="true" tabindex="-1"></a>samples<span class="ot">=</span><span class="dv">100</span></span>
+<span id="cb6-6"><a href="trial-design.html#cb6-6" aria-hidden="true" tabindex="-1"></a>r<span class="ot">=</span><span class="fl">0.35</span></span>
+<span id="cb6-7"><a href="trial-design.html#cb6-7" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span><span class="fu">mvrnorm</span>(<span class="at">n=</span>samples,<span class="at">mu=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.8</span>),<span class="at">Sigma=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r,r,<span class="dv">1</span>),<span class="at">nrow=</span><span class="dv">2</span>),<span class="at">empirical=</span><span class="cn">FALSE</span>)</span>
+<span id="cb6-8"><a href="trial-design.html#cb6-8" aria-hidden="true" tabindex="-1"></a>X <span class="ot">=</span> data[,<span class="dv">1</span>]</span>
+<span id="cb6-9"><a href="trial-design.html#cb6-9" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">=</span> data[,<span class="dv">2</span>]</span>
+<span id="cb6-10"><a href="trial-design.html#cb6-10" aria-hidden="true" tabindex="-1"></a>X<span class="ot">&lt;-</span><span class="fu">as.integer</span>(X<span class="sc">*</span><span class="dv">5</span><span class="sc">+</span><span class="dv">20</span>)</span>
+<span id="cb6-11"><a href="trial-design.html#cb6-11" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">&lt;-</span><span class="fu">as.integer</span>(Y<span class="sc">*</span><span class="dv">5</span><span class="sc">+</span><span class="dv">20</span>)</span>
+<span id="cb6-12"><a href="trial-design.html#cb6-12" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span><span class="fu">mvrnorm</span>(<span class="at">n=</span>samples,<span class="at">mu=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.15</span>),<span class="at">Sigma=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r,r,<span class="dv">1</span>),<span class="at">nrow=</span><span class="dv">2</span>),<span class="at">empirical=</span><span class="cn">FALSE</span>)</span>
+<span id="cb6-13"><a href="trial-design.html#cb6-13" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">=</span> data[,<span class="dv">1</span>]</span>
+<span id="cb6-14"><a href="trial-design.html#cb6-14" aria-hidden="true" tabindex="-1"></a>Y1 <span class="ot">=</span> data[,<span class="dv">2</span>]</span>
+<span id="cb6-15"><a href="trial-design.html#cb6-15" aria-hidden="true" tabindex="-1"></a>X1<span class="ot">&lt;-</span><span class="fu">as.integer</span>(X1<span class="sc">*</span><span class="dv">5</span><span class="sc">+</span><span class="dv">20</span>)</span>
+<span id="cb6-16"><a href="trial-design.html#cb6-16" aria-hidden="true" tabindex="-1"></a>Y1<span class="ot">&lt;-</span><span class="fu">as.integer</span>(Y1<span class="sc">*</span><span class="dv">5</span><span class="sc">+</span><span class="dv">20</span>)</span>
+<span id="cb6-17"><a href="trial-design.html#cb6-17" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span><span class="fu">mvrnorm</span>(<span class="at">n=</span>samples,<span class="at">mu=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.9</span>),<span class="at">Sigma=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r,r,<span class="dv">1</span>),<span class="at">nrow=</span><span class="dv">2</span>),<span class="at">empirical=</span><span class="cn">FALSE</span>)</span>
+<span id="cb6-18"><a href="trial-design.html#cb6-18" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">=</span> data[,<span class="dv">1</span>]</span>
+<span id="cb6-19"><a href="trial-design.html#cb6-19" aria-hidden="true" tabindex="-1"></a>Y2 <span class="ot">=</span> data[,<span class="dv">2</span>]</span>
+<span id="cb6-20"><a href="trial-design.html#cb6-20" aria-hidden="true" tabindex="-1"></a>X2<span class="ot">&lt;-</span><span class="fu">as.integer</span>(X2<span class="sc">*</span><span class="dv">5</span><span class="sc">+</span><span class="dv">20</span>)</span>
+<span id="cb6-21"><a href="trial-design.html#cb6-21" aria-hidden="true" tabindex="-1"></a>Y2<span class="ot">&lt;-</span><span class="fu">as.integer</span>(Y2<span class="sc">*</span><span class="dv">5</span><span class="sc">+</span><span class="dv">20</span>)</span>
+<span id="cb6-22"><a href="trial-design.html#cb6-22" aria-hidden="true" tabindex="-1"></a>cdiff<span class="ot">&lt;-</span>Y<span class="sc">-</span>X</span>
+<span id="cb6-23"><a href="trial-design.html#cb6-23" aria-hidden="true" tabindex="-1"></a>T1diff<span class="ot">&lt;-</span>Y1<span class="sc">-</span>X1</span>
+<span id="cb6-24"><a href="trial-design.html#cb6-24" aria-hidden="true" tabindex="-1"></a>T2diff<span class="ot">&lt;-</span>Y2<span class="sc">-</span>X2</span>
+<span id="cb6-25"><a href="trial-design.html#cb6-25" aria-hidden="true" tabindex="-1"></a>predata<span class="ot">&lt;-</span><span class="fu">c</span>(X,X1,X2)</span>
+<span id="cb6-26"><a href="trial-design.html#cb6-26" aria-hidden="true" tabindex="-1"></a>postdata<span class="ot">&lt;-</span><span class="fu">c</span>(Y,Y1,Y2)</span>
+<span id="cb6-27"><a href="trial-design.html#cb6-27" aria-hidden="true" tabindex="-1"></a>diffdata<span class="ot">&lt;-</span>postdata<span class="sc">-</span>predata</span>
+<span id="cb6-28"><a href="trial-design.html#cb6-28" aria-hidden="true" tabindex="-1"></a>group<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;C&quot;</span>,samples),<span class="fu">rep</span>(<span class="st">&quot;Tx1&quot;</span>,samples),<span class="fu">rep</span>(<span class="st">&quot;Tx2&quot;</span>,samples))</span>
+<span id="cb6-29"><a href="trial-design.html#cb6-29" aria-hidden="true" tabindex="-1"></a>dseq<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="dv">1</span>,samples<span class="sc">*</span><span class="dv">3</span>)</span>
+<span id="cb6-30"><a href="trial-design.html#cb6-30" aria-hidden="true" tabindex="-1"></a>pid<span class="ot">&lt;-</span><span class="fu">as.character</span>(<span class="fu">seq</span>(<span class="dv">1</span>,samples<span class="sc">*</span><span class="dv">3</span>))</span>
+<span id="cb6-31"><a href="trial-design.html#cb6-31" aria-hidden="true" tabindex="-1"></a>mydata<span class="ot">&lt;-</span>(<span class="fu">cbind</span>(predata,postdata,diffdata,group))</span>
+<span id="cb6-32"><a href="trial-design.html#cb6-32" aria-hidden="true" tabindex="-1"></a>mydata<span class="ot">&lt;-</span>mydata[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mydata)), ]</span>
+<span id="cb6-33"><a href="trial-design.html#cb6-33" aria-hidden="true" tabindex="-1"></a>mydata<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="fu">cbind</span>(pid,dseq,mydata))</span>
+<span id="cb6-34"><a href="trial-design.html#cb6-34" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>dseq<span class="ot">&lt;-</span><span class="fu">as.integer</span>(mydata<span class="sc">$</span>dseq)</span>
+<span id="cb6-35"><a href="trial-design.html#cb6-35" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>predata<span class="ot">&lt;-</span><span class="fu">as.integer</span>(mydata<span class="sc">$</span>predata)</span>
+<span id="cb6-36"><a href="trial-design.html#cb6-36" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>postdata<span class="ot">&lt;-</span><span class="fu">as.integer</span>(mydata<span class="sc">$</span>postdata)</span>
+<span id="cb6-37"><a href="trial-design.html#cb6-37" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>diffdata<span class="ot">&lt;-</span><span class="fu">as.integer</span>(mydata<span class="sc">$</span>diffdata)</span></code></pre></div>
+<p>You now have a dataframe (mydata) with pre and post outcome data for a pretend 3-arm trial of treatments for depression (i.e. a decrease in score on the outcome measure is good). There are three treatment arms, “C” (control condition, e.g. TA), “Tx1” (New treatment 1) and “Tx2” (New treatment 2). One arm is superior to control, one isn’t. Each arm includes 100 participants.</p>
+<p>Dataframe columns are:</p>
+<ul>
+<li>pid = participant id (a string of a number from 1 to 300)</li>
+<li>dseq = sequence in which they provided outcome data for the trial (numerical, here the same as pid for convenience)</li>
+<li>predata = score on the depression outcome measure at pre-treatment</li>
+<li>postdata = score on the depression outcome measure at post-treatment</li>
+<li>diffdata = post-treatment score minus pre-treatment score</li>
+<li>group = which group (C, Tx1, Tx2)</li>
+</ul>
+</div>
+<div id="exploring-the-data" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Exploring the data<a href="trial-design.html#exploring-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Take a look at the data (e.g. with View(mydata) ) to get a sense of it. You can then use the functions in the code chunk below to explore the potential outcome of applying sequential Bayesian analyses.</p>
+<p>First, run the code below to load the two functions:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="trial-design.html#cb7-1" aria-hidden="true" tabindex="-1"></a>BFsnapshot<span class="ot">&lt;-</span><span class="cf">function</span>(BFdata,<span class="at">n=</span><span class="dv">300</span>,<span class="at">rs=</span>(<span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)){</span>
+<span id="cb7-2"><a href="trial-design.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="trial-design.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(BFdata<span class="sc">$</span>pid)<span class="sc">&lt;</span>n){</span>
+<span id="cb7-4"><a href="trial-design.html#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">&quot;Error: n larger than number of participants&quot;</span>);</span>
+<span id="cb7-5"><a href="trial-design.html#cb7-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-6"><a href="trial-design.html#cb7-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-7"><a href="trial-design.html#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>(</span>
+<span id="cb7-8"><a href="trial-design.html#cb7-8" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb7-9"><a href="trial-design.html#cb7-9" aria-hidden="true" tabindex="-1"></a>          tdata<span class="ot">&lt;-</span>BFdata[<span class="dv">1</span><span class="sc">:</span>n,]</span>
+<span id="cb7-10"><a href="trial-design.html#cb7-10" aria-hidden="true" tabindex="-1"></a>          <span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n\n</span><span class="st"> Total N = &quot;</span>,n,<span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>)</span>
+<span id="cb7-11"><a href="trial-design.html#cb7-11" aria-hidden="true" tabindex="-1"></a>          <span class="fu">cat</span>(<span class="st">&quot;Control: n = &quot;</span>,<span class="fu">length</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>pid),<span class="st">&quot;, mean change (post minus pre-treatment) = &quot;</span>, <span class="fu">mean</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">na.rm=</span><span class="cn">TRUE</span>),<span class="st">&quot; (SD = &quot;</span>, <span class="fu">sd</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">na.rm=</span><span class="cn">TRUE</span>),<span class="st">&quot;)</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-12"><a href="trial-design.html#cb7-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">cat</span>(<span class="st">&quot;Tx1: n = &quot;</span>,<span class="fu">length</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>pid),<span class="st">&quot;, mean change (post minus pre-treatment) = &quot;</span>, <span class="fu">mean</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">na.rm=</span><span class="cn">TRUE</span>),<span class="st">&quot; (SD = &quot;</span>, <span class="fu">sd</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">na.rm=</span><span class="cn">TRUE</span>),<span class="st">&quot;)</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-13"><a href="trial-design.html#cb7-13" aria-hidden="true" tabindex="-1"></a>         <span class="co">#effect size calculation</span></span>
+<span id="cb7-14"><a href="trial-design.html#cb7-14" aria-hidden="true" tabindex="-1"></a>         d<span class="ot">&lt;-</span>effectsize<span class="sc">::</span><span class="fu">cohens_d</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>diffdata)</span>
+<span id="cb7-15"><a href="trial-design.html#cb7-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">cat</span>(<span class="st">&quot;Effect size vs. control: d=&quot;</span>,d<span class="sc">$</span>Cohens_d,<span class="st">&quot; 95% CIs [&quot;</span>,d<span class="sc">$</span>CI_low,<span class="st">&quot;,&quot;</span>,d<span class="sc">$</span>CI_high,<span class="st">&quot;]</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-16"><a href="trial-design.html#cb7-16" aria-hidden="true" tabindex="-1"></a>         <span class="co">#Calculates directional Bayesian t-test (nullinterval=c(0,Inf))</span></span>
+<span id="cb7-17"><a href="trial-design.html#cb7-17" aria-hidden="true" tabindex="-1"></a>         BF<span class="ot">&lt;-</span>BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(<span class="at">x=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">y=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">nullinterval=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">Inf</span>),<span class="at">rscale=</span>rs)</span>
+<span id="cb7-18"><a href="trial-design.html#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;BF vs. control: BF=&quot;</span>,<span class="fu">exp</span>(BF<span class="sc">@</span>bayesFactor<span class="sc">$</span>bf),<span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-19"><a href="trial-design.html#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="trial-design.html#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;Tx2: n = &quot;</span>,<span class="fu">length</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>pid),<span class="st">&quot;, mean change (post minus pre-treatment) = &quot;</span>, <span class="fu">mean</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">na.rm=</span><span class="cn">TRUE</span>),<span class="st">&quot; (SD = &quot;</span>, <span class="fu">sd</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">na.rm=</span><span class="cn">TRUE</span>),<span class="st">&quot;)</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-21"><a href="trial-design.html#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">#effect size calculation</span></span>
+<span id="cb7-22"><a href="trial-design.html#cb7-22" aria-hidden="true" tabindex="-1"></a>         d<span class="ot">&lt;-</span>effectsize<span class="sc">::</span><span class="fu">cohens_d</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>diffdata)</span>
+<span id="cb7-23"><a href="trial-design.html#cb7-23" aria-hidden="true" tabindex="-1"></a>         <span class="fu">cat</span>(<span class="st">&quot;Effect size vs. control: d=&quot;</span>,d<span class="sc">$</span>Cohens_d,<span class="st">&quot; 95% CIs [&quot;</span>,d<span class="sc">$</span>CI_low,<span class="st">&quot;,&quot;</span>,d<span class="sc">$</span>CI_high,<span class="st">&quot;]</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-24"><a href="trial-design.html#cb7-24" aria-hidden="true" tabindex="-1"></a>         <span class="co">#Calculates directional Bayesian t-test (nullinterval=c(0,Inf))</span></span>
+<span id="cb7-25"><a href="trial-design.html#cb7-25" aria-hidden="true" tabindex="-1"></a>         BF<span class="ot">&lt;-</span>BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(<span class="at">x=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">y=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">nullinterval=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">Inf</span>),<span class="at">rscale=</span>rs)</span>
+<span id="cb7-26"><a href="trial-design.html#cb7-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;BF vs. control: BF=&quot;</span>,<span class="fu">exp</span>(BF<span class="sc">@</span>bayesFactor<span class="sc">$</span>bf),<span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>) </span>
+<span id="cb7-27"><a href="trial-design.html#cb7-27" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb7-28"><a href="trial-design.html#cb7-28" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb7-29"><a href="trial-design.html#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">error=</span><span class="cf">function</span>(cond) {</span>
+<span id="cb7-30"><a href="trial-design.html#cb7-30" aria-hidden="true" tabindex="-1"></a>          <span class="fu">return</span> (<span class="fu">paste0</span>(<span class="st">&quot;Something went wrong! &quot;</span>,cond))</span>
+<span id="cb7-31"><a href="trial-design.html#cb7-31" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb7-32"><a href="trial-design.html#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-33"><a href="trial-design.html#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="trial-design.html#cb7-34" aria-hidden="true" tabindex="-1"></a>seqBFs<span class="ot">&lt;-</span><span class="cf">function</span>(BFdata,<span class="at">rs=</span>(<span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>)){</span>
+<span id="cb7-35"><a href="trial-design.html#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>(</span>
+<span id="cb7-36"><a href="trial-design.html#cb7-36" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb7-37"><a href="trial-design.html#cb7-37" aria-hidden="true" tabindex="-1"></a>          alldata<span class="ot">&lt;-</span>BFdata[<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(BFdata<span class="sc">$</span>pid),]</span>
+<span id="cb7-38"><a href="trial-design.html#cb7-38" aria-hidden="true" tabindex="-1"></a>          dsTx1<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-39"><a href="trial-design.html#cb7-39" aria-hidden="true" tabindex="-1"></a>          dsTx2<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-40"><a href="trial-design.html#cb7-40" aria-hidden="true" tabindex="-1"></a>          BFsTx1<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-41"><a href="trial-design.html#cb7-41" aria-hidden="true" tabindex="-1"></a>          BFsTx2<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-42"><a href="trial-design.html#cb7-42" aria-hidden="true" tabindex="-1"></a>          nsTx1<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-43"><a href="trial-design.html#cb7-43" aria-hidden="true" tabindex="-1"></a>          nsTx2<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-44"><a href="trial-design.html#cb7-44" aria-hidden="true" tabindex="-1"></a>          is<span class="ot">&lt;-</span><span class="fu">vector</span>()</span>
+<span id="cb7-45"><a href="trial-design.html#cb7-45" aria-hidden="true" tabindex="-1"></a>          <span class="co">#start at index number 10 to avoid problems</span></span>
+<span id="cb7-46"><a href="trial-design.html#cb7-46" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">10</span><span class="sc">:</span><span class="fu">length</span>(alldata<span class="sc">$</span>pid)){</span>
+<span id="cb7-47"><a href="trial-design.html#cb7-47" aria-hidden="true" tabindex="-1"></a>          tdata<span class="ot">&lt;-</span>alldata[<span class="dv">1</span><span class="sc">:</span>i,]</span>
+<span id="cb7-48"><a href="trial-design.html#cb7-48" aria-hidden="true" tabindex="-1"></a>          Ns<span class="ot">&lt;-</span><span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(<span class="fu">table</span>(tdata[<span class="dv">1</span><span class="sc">:</span>i,]<span class="sc">$</span>group)))</span>
+<span id="cb7-49"><a href="trial-design.html#cb7-49" aria-hidden="true" tabindex="-1"></a>          dsTx1<span class="ot">&lt;-</span><span class="fu">c</span>(dsTx1,(effectsize<span class="sc">::</span><span class="fu">cohens_d</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>diffdata))<span class="sc">$</span>Cohens_d)</span>
+<span id="cb7-50"><a href="trial-design.html#cb7-50" aria-hidden="true" tabindex="-1"></a>          BFsTx1<span class="ot">&lt;-</span><span class="fu">c</span>(BFsTx1,<span class="fu">exp</span>((BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(<span class="at">x=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">y=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx1&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">nullinterval=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">Inf</span>),<span class="at">rscale=</span>rs)<span class="sc">@</span>bayesFactor<span class="sc">$</span>bf)))</span>
+<span id="cb7-51"><a href="trial-design.html#cb7-51" aria-hidden="true" tabindex="-1"></a>            nsTx1<span class="ot">&lt;-</span><span class="fu">c</span>(nsTx1,Ns[<span class="st">&quot;Tx1&quot;</span>,])</span>
+<span id="cb7-52"><a href="trial-design.html#cb7-52" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb7-53"><a href="trial-design.html#cb7-53" aria-hidden="true" tabindex="-1"></a>            dsTx2<span class="ot">&lt;-</span><span class="fu">c</span>(dsTx2,(effectsize<span class="sc">::</span><span class="fu">cohens_d</span>(tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>diffdata))<span class="sc">$</span>Cohens_d)</span>
+<span id="cb7-54"><a href="trial-design.html#cb7-54" aria-hidden="true" tabindex="-1"></a>            BFsTx2<span class="ot">&lt;-</span><span class="fu">c</span>(BFsTx2,<span class="fu">exp</span>((BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(<span class="at">x=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;C&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">y=</span>tdata[tdata<span class="sc">$</span>group<span class="sc">==</span><span class="st">&quot;Tx2&quot;</span>,]<span class="sc">$</span>diffdata,<span class="at">nullinterval=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">Inf</span>),<span class="at">rscale=</span>rs)<span class="sc">@</span>bayesFactor<span class="sc">$</span>bf)))</span>
+<span id="cb7-55"><a href="trial-design.html#cb7-55" aria-hidden="true" tabindex="-1"></a>            nsTx2<span class="ot">&lt;-</span><span class="fu">c</span>(nsTx2,Ns[<span class="st">&quot;Tx2&quot;</span>,])</span>
+<span id="cb7-56"><a href="trial-design.html#cb7-56" aria-hidden="true" tabindex="-1"></a>            is<span class="ot">&lt;-</span><span class="fu">c</span>(is,i)</span>
+<span id="cb7-57"><a href="trial-design.html#cb7-57" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb7-58"><a href="trial-design.html#cb7-58" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb7-59"><a href="trial-design.html#cb7-59" aria-hidden="true" tabindex="-1"></a>          allresults<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="fu">cbind</span>(is,nsTx1,dsTx1,BFsTx1,nsTx2,dsTx2,BFsTx2))</span>
+<span id="cb7-60"><a href="trial-design.html#cb7-60" aria-hidden="true" tabindex="-1"></a>          <span class="fu">return</span>(allresults)</span>
+<span id="cb7-61"><a href="trial-design.html#cb7-61" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb7-62"><a href="trial-design.html#cb7-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">error=</span><span class="cf">function</span>(cond) {</span>
+<span id="cb7-63"><a href="trial-design.html#cb7-63" aria-hidden="true" tabindex="-1"></a>          <span class="fu">return</span> (<span class="fu">paste0</span>(<span class="st">&quot;Something went wrong! &quot;</span>,cond))</span>
+<span id="cb7-64"><a href="trial-design.html#cb7-64" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb7-65"><a href="trial-design.html#cb7-65" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>You can now use these two functions to explore the effect of doing sequential Bayesian analyses (here for simplicity, t-test on change scores).</p>
+<div id="function-bfsnapshot" class="section level4 hasAnchor" number="2.2.2.1">
+<h4><span class="header-section-number">2.2.2.1</span> Function: BFsnapshot()<a href="trial-design.html#function-bfsnapshot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>BFsnapshot() can be used to give you a snapshot of the data at a particular point in time. Arguments are:</p>
+<ul>
+<li>BFdata = the dataframe with the data (i.e. here it is mydata)</li>
+<li>n = the total sample size / sequence number (up to a max of 300) you want to take the snapshot at (e.g. if you put 100 in here, it will give you a snapshot of the analysis outcomes at the point there were 100 total participants in the trial)</li>
+<li>rs = you can ignore unless you want to try change the rscale parameter (sets to sqrt2/2 as default)</li>
+</ul>
+<p>e.g. BFsnapshot(mydata,100) would give you analysis output when there are 100 people in the trial</p>
+</div>
+<div id="function-seqbfs" class="section level4 hasAnchor" number="2.2.2.2">
+<h4><span class="header-section-number">2.2.2.2</span> Function: seqBFs()<a href="trial-design.html#function-seqbfs" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>seqBFs() outputs a dataframe with sequential BFs over the course of the simulated trial. You just pass it the dataframe (and can specify a rscale parameter if you want to change this)</p>
+<p>trialresults&lt;-seqBFs(mydata)</p>
+<p>will give you a dataframe (trialresults), which you can then investigate (e.g. via View(trialresults), or you can try making some plots) to see how the BFs develop over time.</p>
+<p>Columns in the dataframe are:</p>
+<ul>
+<li>is = index / total N participants in the trial</li>
+<li>nsTx1 = n in Tx1 arm</li>
+<li>dsTx1 = effect size (cohen’s d) for Tx1 vs control</li>
+<li>BFsTx1 = Bayes Factor for Tx1 vs control</li>
+<li>nsTx2 = n in Tx2 arm</li>
+<li>dsTx2 = effect size (cohen’s d) for Tx2 vs control</li>
+<li>BFsTx2 = Bayes Factor for Tx2 vs control</li>
+</ul>
+</div>
+<div id="exercise-task" class="section level4 hasAnchor" number="2.2.2.3">
+<h4><span class="header-section-number">2.2.2.3</span> Exercise task:<a href="trial-design.html#exercise-task" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>See if you can work out what would have happened if you used your chosen trial parameters on this data set. When would you hit a BF boundary for each treatment arm (if at all)?</p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="packages.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="re-analysis-of-rct-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["DZP_R_bookdown.pdf", "DZP_R_bookdown.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

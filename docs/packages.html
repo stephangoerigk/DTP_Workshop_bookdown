@@ -4,24 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 1 Packages needed | TrialDesign_Blackwell_19.11.22.knit</title>
-  <meta name="description" content="" />
+  <title>Einführung in R</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 1 Packages needed | TrialDesign_Blackwell_19.11.22.knit" />
+  <meta property="og:title" content="Einführung in R" />
   <meta property="og:type" content="book" />
   
-  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 1 Packages needed | TrialDesign_Blackwell_19.11.22.knit" />
+  <meta name="twitter:title" content="Einführung in R" />
   
-  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   
 
+<meta name="author" content="Stephan Goerigk" />
 
 
+<meta name="date" content="2022-11-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -90,7 +92,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -103,7 +105,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -131,10 +133,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">DZP Methodenworkshop</a></li>
+<li><a href="./">DZP Methods Workshop</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="packages-needed.html"><a href="packages-needed.html"><i class="fa fa-check"></i><b>1</b> Packages needed</a></li>
+<li class="chapter" data-level="1" data-path="packages.html"><a href="packages.html"><i class="fa fa-check"></i><b>1</b> Packages</a></li>
 <li class="chapter" data-level="2" data-path="trial-design.html"><a href="trial-design.html"><i class="fa fa-check"></i><b>2</b> Trial Design</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="trial-design.html"><a href="trial-design.html#exercise-1-simulating-data-using-bfda-and-selecting-trial-parameters"><i class="fa fa-check"></i><b>2.1</b> Exercise 1: Simulating data using BFDA and selecting trial parameters</a>
@@ -181,7 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Einführung in R</a>
           </h1>
         </div>
 
@@ -189,45 +191,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<!--bookdown:title:end-->
-<!--bookdown:title:start-->
-<div id="packages-needed" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Kapitel 1</span> Packages needed<a href="packages-needed.html#packages-needed" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="header">
+<h1 class="title">Einführung in R</h1>
+<p class="author"><em>Stephan Goerigk</em></p>
+<p class="date"><em>2022-11-19</em></p>
+</div>
+<div id="packages" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Kapitel 1</span> Packages<a href="packages.html#packages" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>You will need to install and load the following packages for these exercises:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="packages-needed.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;BayesFactor&quot;)</span></span>
-<span id="cb1-2"><a href="packages-needed.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;MASS&quot;)</span></span>
-<span id="cb1-3"><a href="packages-needed.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;) # if not yet installed</span></span>
-<span id="cb1-4"><a href="packages-needed.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># library(devtools)</span></span>
-<span id="cb1-5"><a href="packages-needed.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;nicebread/BFDA&quot;, subdir=&quot;package&quot;)</span></span>
-<span id="cb1-6"><a href="packages-needed.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-7"><a href="packages-needed.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># library(BFDA)</span></span>
-<span id="cb1-8"><a href="packages-needed.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># library(BayesFactor)</span></span>
-<span id="cb1-9"><a href="packages-needed.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># library(MASS)</span></span>
-<span id="cb1-10"><a href="packages-needed.html#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="packages-needed.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Plus BFDA - see next section</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="packages-needed.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;ggplot2&quot;)</span></span>
-<span id="cb2-2"><a href="packages-needed.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;lme4&quot;)</span></span>
-<span id="cb2-3"><a href="packages-needed.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;lmerTest&quot;)</span></span>
-<span id="cb2-4"><a href="packages-needed.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;dendextend&quot;)</span></span>
-<span id="cb2-5"><a href="packages-needed.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;tidyverse&quot;)</span></span>
-<span id="cb2-6"><a href="packages-needed.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;lcmm&quot;)</span></span>
-<span id="cb2-7"><a href="packages-needed.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;LCTMtools&quot;)</span></span>
-<span id="cb2-8"><a href="packages-needed.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;cowplot&quot;)</span></span>
-<span id="cb2-9"><a href="packages-needed.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;emmeans&quot;)</span></span>
-<span id="cb2-10"><a href="packages-needed.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;psych&quot;)</span></span>
-<span id="cb2-11"><a href="packages-needed.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;BBmisc&quot;)</span></span>
-<span id="cb2-12"><a href="packages-needed.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="packages-needed.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-14"><a href="packages-needed.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb2-15"><a href="packages-needed.html#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
-<span id="cb2-16"><a href="packages-needed.html#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dendextend)</span>
-<span id="cb2-17"><a href="packages-needed.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-18"><a href="packages-needed.html#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lcmm)</span>
-<span id="cb2-19"><a href="packages-needed.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(LCTMtools)</span>
-<span id="cb2-20"><a href="packages-needed.html#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb2-21"><a href="packages-needed.html#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb2-22"><a href="packages-needed.html#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
-<span id="cb2-23"><a href="packages-needed.html#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BBmisc)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="packages.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;BayesFactor&quot;)</span></span>
+<span id="cb1-2"><a href="packages.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;MASS&quot;)</span></span>
+<span id="cb1-3"><a href="packages.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;) # if not yet installed</span></span>
+<span id="cb1-4"><a href="packages.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># library(devtools)</span></span>
+<span id="cb1-5"><a href="packages.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;nicebread/BFDA&quot;, subdir=&quot;package&quot;)</span></span>
+<span id="cb1-6"><a href="packages.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb1-7"><a href="packages.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># library(BFDA)</span></span>
+<span id="cb1-8"><a href="packages.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># library(BayesFactor)</span></span>
+<span id="cb1-9"><a href="packages.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># library(MASS)</span></span>
+<span id="cb1-10"><a href="packages.html#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="packages.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Plus BFDA - see next section</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="packages.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;ggplot2&quot;)</span></span>
+<span id="cb2-2"><a href="packages.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;lme4&quot;)</span></span>
+<span id="cb2-3"><a href="packages.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;lmerTest&quot;)</span></span>
+<span id="cb2-4"><a href="packages.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;dendextend&quot;)</span></span>
+<span id="cb2-5"><a href="packages.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;tidyverse&quot;)</span></span>
+<span id="cb2-6"><a href="packages.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;lcmm&quot;)</span></span>
+<span id="cb2-7"><a href="packages.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;LCTMtools&quot;)</span></span>
+<span id="cb2-8"><a href="packages.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;cowplot&quot;)</span></span>
+<span id="cb2-9"><a href="packages.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;emmeans&quot;)</span></span>
+<span id="cb2-10"><a href="packages.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;psych&quot;)</span></span>
+<span id="cb2-11"><a href="packages.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;BBmisc&quot;)</span></span>
+<span id="cb2-12"><a href="packages.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="packages.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-14"><a href="packages.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb2-15"><a href="packages.html#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
+<span id="cb2-16"><a href="packages.html#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dendextend)</span>
+<span id="cb2-17"><a href="packages.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-18"><a href="packages.html#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lcmm)</span>
+<span id="cb2-19"><a href="packages.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(LCTMtools)</span>
+<span id="cb2-20"><a href="packages.html#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb2-21"><a href="packages.html#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb2-22"><a href="packages.html#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb2-23"><a href="packages.html#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BBmisc)</span></code></pre></div>
+
 </div>
             </section>
 
@@ -277,8 +283,11 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": null,
-"search": false,
+"download": ["DZP_R_bookdown.pdf", "DZP_R_bookdown.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -286,6 +295,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

@@ -1,17 +1,44 @@
-# Packages
+# Packages 
 
 You will need to install and load the following packages for these exercises:
 
-```{r}
-install.packages("BayesFactor")
-install.packages("MASS")
-install.packages("devtools") # if not yet installed
-library(devtools)
-install_github("nicebread/BFDA", subdir="package")
+```{r thepackages, eval = FALSE}
 
-library(MASS)
+# install.packages("BayesFactor")
+# install.packages("MASS")
+# install.packages("devtools") # if not yet installed
+# library(devtools)
+# install_github("nicebread/BFDA", subdir="package")
+# 
+# library(BFDA)
+# library(BayesFactor)
+# library(MASS)
+
+#Plus BFDA - see next section
+```
+
+```{r message=FALSE, warning=FALSE}
+# install.packages("ggplot2")
+# install.packages("lme4")
+# install.packages("lmerTest")
+# install.packages("dendextend")
+# install.packages("tidyverse")
+# install.packages("lcmm")
+# install.packages("LCTMtools")
+# install.packages("cowplot")
+# install.packages("emmeans")
+# install.packages("psych")
+# install.packages("BBmisc")
+
+library(ggplot2)
+library(lme4)
+library(lmerTest)
+library(dendextend)
 library(tidyverse)
 library(lcmm)
 library(LCTMtools)
+library(cowplot)
+library(emmeans)
+library(psych)
+library(BBmisc)
 ```
-

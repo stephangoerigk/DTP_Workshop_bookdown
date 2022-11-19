@@ -5,8 +5,10 @@ language:
   ui:
     chapter_name: "Kapitel "
 rmd_files: [
-  "index.Rmd"
-  #"TrialDesign_Blackwell_19.Rmd",
+  "index.Rmd",
+  "Packages.Rmd",
+  "design.Rmd",
+  "Analysis.Rmd"
   # "Tabellen.Rmd",
   # "Preprocessing.Rmd",
   # "Korrelationen.Rmd",

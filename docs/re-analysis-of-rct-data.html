@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitel 3 Re-analysis of RCT data | Einführung in R</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitel 3 Re-analysis of RCT data | Einführung in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitel 3 Re-analysis of RCT data | Einführung in R" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Stephan Goerigk" />
+
+
+<meta name="date" content="2022-11-19" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="trial-design.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DZP Methods Workshop</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="packages.html"><a href="packages.html"><i class="fa fa-check"></i><b>1</b> Packages</a></li>
+<li class="chapter" data-level="2" data-path="trial-design.html"><a href="trial-design.html"><i class="fa fa-check"></i><b>2</b> Trial Design</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="trial-design.html"><a href="trial-design.html#exercise-1-simulating-data-using-bfda-and-selecting-trial-parameters"><i class="fa fa-check"></i><b>2.1</b> Exercise 1: Simulating data using BFDA and selecting trial parameters</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="trial-design.html"><a href="trial-design.html#simulate-sequential-analyses-for-planning"><i class="fa fa-check"></i><b>2.1.1</b> Simulate sequential analyses for planning</a></li>
+<li class="chapter" data-level="2.1.2" data-path="trial-design.html"><a href="trial-design.html#try-out-different-analysis-parameters-to-find-a-set-that-fits-your-requirements"><i class="fa fa-check"></i><b>2.1.2</b> Try out different analysis parameters to find a set that fits your requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="trial-design.html"><a href="trial-design.html#exercise-2-carry-out-sequential-analysis-of-simulated-trial-data"><i class="fa fa-check"></i><b>2.2</b> Exercise 2: Carry out sequential analysis of (simulated) trial data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="trial-design.html"><a href="trial-design.html#overview-and-setup"><i class="fa fa-check"></i><b>2.2.1</b> Overview and setup</a></li>
+<li class="chapter" data-level="2.2.2" data-path="trial-design.html"><a href="trial-design.html#exploring-the-data"><i class="fa fa-check"></i><b>2.2.2</b> Exploring the data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html"><i class="fa fa-check"></i><b>3</b> Re-analysis of RCT data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#exercise-1-symptom-clusters"><i class="fa fa-check"></i><b>3.1</b> Exercise 1: Symptom Clusters</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#simulate-practice-data"><i class="fa fa-check"></i><b>3.1.1</b> Simulate Practice Data</a></li>
+<li class="chapter" data-level="3.1.2" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#traditional-approach"><i class="fa fa-check"></i><b>3.1.2</b> Traditional Approach</a></li>
+<li class="chapter" data-level="3.1.3" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#prepare-for-clustering"><i class="fa fa-check"></i><b>3.1.3</b> Prepare for Clustering</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#exercise-2-response-trajectories"><i class="fa fa-check"></i><b>3.2</b> Exercise 2: Response Trajectories</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#simulate-practice-data-1"><i class="fa fa-check"></i><b>3.2.1</b> Simulate Practice Data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#inspect-the-data"><i class="fa fa-check"></i><b>3.2.2</b> Inspect the Data</a></li>
+<li class="chapter" data-level="3.2.3" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#create-lclmm"><i class="fa fa-check"></i><b>3.2.3</b> Create LCLMM</a></li>
+<li class="chapter" data-level="3.2.4" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#inspect-the-lclmm-model"><i class="fa fa-check"></i><b>3.2.4</b> Inspect the LCLMM Model</a></li>
+<li class="chapter" data-level="3.2.5" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#plot-lclmm-model-predictions"><i class="fa fa-check"></i><b>3.2.5</b> Plot LCLMM Model Predictions</a></li>
+<li class="chapter" data-level="3.2.6" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#transfer-class-membership-to-original-dataset"><i class="fa fa-check"></i><b>3.2.6</b> Transfer class membership to original dataset</a></li>
+<li class="chapter" data-level="3.2.7" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#modeling-class-membership-as-dependent-variable"><i class="fa fa-check"></i><b>3.2.7</b> Modeling class membership as dependent variable</a></li>
+<li class="chapter" data-level="3.2.8" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#determine-the-optimal-model"><i class="fa fa-check"></i><b>3.2.8</b> Determine the optimal model</a></li>
+<li class="chapter" data-level="3.2.9" data-path="re-analysis-of-rct-data.html"><a href="re-analysis-of-rct-data.html#selection-loop"><i class="fa fa-check"></i><b>3.2.9</b> Selection loop</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Einführung in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="re-analysis-of-rct-data" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Kapitel 3</span> Re-analysis of RCT data<a href="re-analysis-of-rct-data.html#re-analysis-of-rct-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="exercise-1-symptom-clusters" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Exercise 1: Symptom Clusters<a href="re-analysis-of-rct-data.html#exercise-1-symptom-clusters" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="simulate-practice-data" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Simulate Practice Data<a href="re-analysis-of-rct-data.html#simulate-practice-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>First let us simulate some practice data. The data are based on the items of the Hamilton-Anxiety-Rating Scale.</p>
+<p>Initially we determine a sample size:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="re-analysis-of-rct-data.html#cb8-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">350</span> <span class="co"># number of individuals</span></span></code></pre></div>
+<p>Then the names of the items:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="re-analysis-of-rct-data.html#cb9-1" aria-hidden="true" tabindex="-1"></a>hama_names <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Anxious Mood&quot;</span>,</span>
+<span id="cb9-2"><a href="re-analysis-of-rct-data.html#cb9-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Tension&quot;</span>,</span>
+<span id="cb9-3"><a href="re-analysis-of-rct-data.html#cb9-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Fears&quot;</span>,</span>
+<span id="cb9-4"><a href="re-analysis-of-rct-data.html#cb9-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Insomnia&quot;</span>,</span>
+<span id="cb9-5"><a href="re-analysis-of-rct-data.html#cb9-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Concentration and Memory&quot;</span>,</span>
+<span id="cb9-6"><a href="re-analysis-of-rct-data.html#cb9-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Depressed Mood&quot;</span>,</span>
+<span id="cb9-7"><a href="re-analysis-of-rct-data.html#cb9-7" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;General somatic symptoms: muscular&quot;</span>,</span>
+<span id="cb9-8"><a href="re-analysis-of-rct-data.html#cb9-8" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;General somatic symptoms: sensory&quot;</span>,</span>
+<span id="cb9-9"><a href="re-analysis-of-rct-data.html#cb9-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Cardiovascular symptoms&quot;</span>,</span>
+<span id="cb9-10"><a href="re-analysis-of-rct-data.html#cb9-10" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Respiratory symptoms&quot;</span>,</span>
+<span id="cb9-11"><a href="re-analysis-of-rct-data.html#cb9-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Gastro-intestinal symptoms&quot;</span>,</span>
+<span id="cb9-12"><a href="re-analysis-of-rct-data.html#cb9-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Genito-urinary symptoms&quot;</span>,</span>
+<span id="cb9-13"><a href="re-analysis-of-rct-data.html#cb9-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Other autonomic symptoms&quot;</span>)</span></code></pre></div>
+<p>And finally mean values and standard deviations as well as a plausible covariance structure:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="re-analysis-of-rct-data.html#cb10-1" aria-hidden="true" tabindex="-1"></a>hama_means <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">2.9669421</span>,</span>
+<span id="cb10-2"><a href="re-analysis-of-rct-data.html#cb10-2" aria-hidden="true" tabindex="-1"></a>               <span class="fl">2.8044077</span>,</span>
+<span id="cb10-3"><a href="re-analysis-of-rct-data.html#cb10-3" aria-hidden="true" tabindex="-1"></a>               <span class="fl">2.4559229</span>,</span>
+<span id="cb10-4"><a href="re-analysis-of-rct-data.html#cb10-4" aria-hidden="true" tabindex="-1"></a>               <span class="fl">2.4297521</span>,</span>
+<span id="cb10-5"><a href="re-analysis-of-rct-data.html#cb10-5" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.3815427</span>,</span>
+<span id="cb10-6"><a href="re-analysis-of-rct-data.html#cb10-6" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.3071625</span>,</span>
+<span id="cb10-7"><a href="re-analysis-of-rct-data.html#cb10-7" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.6129477</span>,</span>
+<span id="cb10-8"><a href="re-analysis-of-rct-data.html#cb10-8" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.5633609</span>,</span>
+<span id="cb10-9"><a href="re-analysis-of-rct-data.html#cb10-9" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.4531680</span>,</span>
+<span id="cb10-10"><a href="re-analysis-of-rct-data.html#cb10-10" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.0330579</span>,</span>
+<span id="cb10-11"><a href="re-analysis-of-rct-data.html#cb10-11" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.7190083</span>,</span>
+<span id="cb10-12"><a href="re-analysis-of-rct-data.html#cb10-12" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.6694215</span>,</span>
+<span id="cb10-13"><a href="re-analysis-of-rct-data.html#cb10-13" aria-hidden="true" tabindex="-1"></a>               <span class="fl">1.6198347</span>)</span>
+<span id="cb10-14"><a href="re-analysis-of-rct-data.html#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="re-analysis-of-rct-data.html#cb10-15" aria-hidden="true" tabindex="-1"></a>hama_means_post <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">2.9669421-2.3</span>,</span>
+<span id="cb10-16"><a href="re-analysis-of-rct-data.html#cb10-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">2.8044077-2.4</span>,</span>
+<span id="cb10-17"><a href="re-analysis-of-rct-data.html#cb10-17" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">2.4559229-2.2</span>,</span>
+<span id="cb10-18"><a href="re-analysis-of-rct-data.html#cb10-18" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">2.4297521-0.8</span>,</span>
+<span id="cb10-19"><a href="re-analysis-of-rct-data.html#cb10-19" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.3815427-0.7</span>,</span>
+<span id="cb10-20"><a href="re-analysis-of-rct-data.html#cb10-20" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.3071625-1.2</span>,</span>
+<span id="cb10-21"><a href="re-analysis-of-rct-data.html#cb10-21" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.6129477-0.5</span>,</span>
+<span id="cb10-22"><a href="re-analysis-of-rct-data.html#cb10-22" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.5633609-0.4</span>,</span>
+<span id="cb10-23"><a href="re-analysis-of-rct-data.html#cb10-23" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.4531680</span><span class="sc">-</span> <span class="fl">0.2</span>,</span>
+<span id="cb10-24"><a href="re-analysis-of-rct-data.html#cb10-24" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.0330579-0.4</span>,</span>
+<span id="cb10-25"><a href="re-analysis-of-rct-data.html#cb10-25" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.7190083-0.1</span>,</span>
+<span id="cb10-26"><a href="re-analysis-of-rct-data.html#cb10-26" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.6694215-0.1</span>,</span>
+<span id="cb10-27"><a href="re-analysis-of-rct-data.html#cb10-27" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">1.6198347-0.8</span>)</span>
+<span id="cb10-28"><a href="re-analysis-of-rct-data.html#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="re-analysis-of-rct-data.html#cb10-29" aria-hidden="true" tabindex="-1"></a>hama_sds <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.7136179</span>,</span>
+<span id="cb10-30"><a href="re-analysis-of-rct-data.html#cb10-30" aria-hidden="true" tabindex="-1"></a>             <span class="fl">0.8339568</span>,</span>
+<span id="cb10-31"><a href="re-analysis-of-rct-data.html#cb10-31" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.1314254</span>,</span>
+<span id="cb10-32"><a href="re-analysis-of-rct-data.html#cb10-32" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2283532</span>,</span>
+<span id="cb10-33"><a href="re-analysis-of-rct-data.html#cb10-33" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2313786</span>,</span>
+<span id="cb10-34"><a href="re-analysis-of-rct-data.html#cb10-34" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2454069</span>,</span>
+<span id="cb10-35"><a href="re-analysis-of-rct-data.html#cb10-35" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2715661</span>,</span>
+<span id="cb10-36"><a href="re-analysis-of-rct-data.html#cb10-36" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2264810</span>,</span>
+<span id="cb10-37"><a href="re-analysis-of-rct-data.html#cb10-37" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2583008</span>,</span>
+<span id="cb10-38"><a href="re-analysis-of-rct-data.html#cb10-38" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2200659</span>,</span>
+<span id="cb10-39"><a href="re-analysis-of-rct-data.html#cb10-39" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.2815280</span>,</span>
+<span id="cb10-40"><a href="re-analysis-of-rct-data.html#cb10-40" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.0691029</span>,</span>
+<span id="cb10-41"><a href="re-analysis-of-rct-data.html#cb10-41" aria-hidden="true" tabindex="-1"></a>             <span class="fl">1.1585213</span>)</span>
+<span id="cb10-42"><a href="re-analysis-of-rct-data.html#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-43"><a href="re-analysis-of-rct-data.html#cb10-43" aria-hidden="true" tabindex="-1"></a>hama_cor <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/stephangoerigk/DZP_Workshop_Slides/master/hamacor.csv&quot;</span>)</span>
+<span id="cb10-44"><a href="re-analysis-of-rct-data.html#cb10-44" aria-hidden="true" tabindex="-1"></a>hama_cor <span class="ot">=</span> <span class="fu">as.matrix</span>(hama_cor[,<span class="sc">-</span><span class="dv">1</span>])</span></code></pre></div>
+<p>Now, let us simulate:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="re-analysis-of-rct-data.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create baseline data</span></span>
+<span id="cb11-2"><a href="re-analysis-of-rct-data.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb11-3"><a href="re-analysis-of-rct-data.html#cb11-3" aria-hidden="true" tabindex="-1"></a>data_cluster_bl <span class="ot">=</span> <span class="fu">round</span>(</span>
+<span id="cb11-4"><a href="re-analysis-of-rct-data.html#cb11-4" aria-hidden="true" tabindex="-1"></a>  faux<span class="sc">::</span><span class="fu">rnorm_multi</span>(<span class="at">n =</span> n,</span>
+<span id="cb11-5"><a href="re-analysis-of-rct-data.html#cb11-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">mu =</span> hama_means,</span>
+<span id="cb11-6"><a href="re-analysis-of-rct-data.html#cb11-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> hama_sds,</span>
+<span id="cb11-7"><a href="re-analysis-of-rct-data.html#cb11-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">r =</span> hama_cor,</span>
+<span id="cb11-8"><a href="re-analysis-of-rct-data.html#cb11-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">varnames =</span> hama_names,</span>
+<span id="cb11-9"><a href="re-analysis-of-rct-data.html#cb11-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">empirical =</span> F), <span class="dv">2</span>)</span>
+<span id="cb11-10"><a href="re-analysis-of-rct-data.html#cb11-10" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>id <span class="ot">=</span> <span class="fu">row.names</span>(data_cluster_bl)</span>
+<span id="cb11-11"><a href="re-analysis-of-rct-data.html#cb11-11" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>time <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb11-12"><a href="re-analysis-of-rct-data.html#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="re-analysis-of-rct-data.html#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create post-treatment data</span></span>
+<span id="cb11-14"><a href="re-analysis-of-rct-data.html#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="re-analysis-of-rct-data.html#cb11-15" aria-hidden="true" tabindex="-1"></a>data_cluster_post <span class="ot">=</span> <span class="fu">round</span>(</span>
+<span id="cb11-16"><a href="re-analysis-of-rct-data.html#cb11-16" aria-hidden="true" tabindex="-1"></a>  faux<span class="sc">::</span><span class="fu">rnorm_multi</span>(<span class="at">n =</span> n,</span>
+<span id="cb11-17"><a href="re-analysis-of-rct-data.html#cb11-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">mu =</span> hama_means_post,</span>
+<span id="cb11-18"><a href="re-analysis-of-rct-data.html#cb11-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd =</span> hama_sds,</span>
+<span id="cb11-19"><a href="re-analysis-of-rct-data.html#cb11-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">r =</span> hama_cor,</span>
+<span id="cb11-20"><a href="re-analysis-of-rct-data.html#cb11-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">varnames =</span> hama_names,</span>
+<span id="cb11-21"><a href="re-analysis-of-rct-data.html#cb11-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">empirical =</span> F), <span class="dv">2</span>)</span>
+<span id="cb11-22"><a href="re-analysis-of-rct-data.html#cb11-22" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>id <span class="ot">=</span> <span class="fu">row.names</span>(data_cluster_post)</span>
+<span id="cb11-23"><a href="re-analysis-of-rct-data.html#cb11-23" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>time <span class="ot">=</span> <span class="dv">1</span></span></code></pre></div>
+<p>Let us briefly look at the data:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="re-analysis-of-rct-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describe</span>(data_cluster_bl)</span></code></pre></div>
+<pre><code>##                                    vars   n   mean     sd median trimmed    mad
+## Anxious Mood                          1 350   2.97   0.71   2.98    2.98   0.67
+## Tension                               2 350   2.80   0.83   2.84    2.80   0.85
+## Fears                                 3 350   2.43   1.08   2.45    2.45   1.07
+## Insomnia                              4 350   2.38   1.21   2.26    2.36   1.20
+## Concentration and Memory              5 350   1.43   1.19   1.41    1.44   1.10
+## Depressed Mood                        6 350   1.35   1.23   1.40    1.35   1.19
+## General somatic symptoms: muscular    7 350   1.68   1.28   1.69    1.70   1.32
+## General somatic symptoms: sensory     8 350   1.65   1.15   1.56    1.64   1.14
+## Cardiovascular symptoms               9 350   1.38   1.34   1.37    1.37   1.28
+## Respiratory symptoms                 10 350   0.98   1.23   0.96    0.98   1.26
+## Gastro-intestinal symptoms           11 350   1.69   1.31   1.63    1.65   1.14
+## Genito-urinary symptoms              12 350   0.68   1.04   0.64    0.69   1.00
+## Other autonomic symptoms             13 350   1.62   1.14   1.63    1.65   1.16
+## id*                                  14 350 175.50 101.18 175.50  175.50 129.73
+## time                                 15 350   0.00   0.00   0.00    0.00   0.00
+##                                      min    max  range  skew kurtosis   se
+## Anxious Mood                        0.62   5.42   4.80 -0.07     0.17 0.04
+## Tension                             0.23   5.25   5.02 -0.05     0.03 0.04
+## Fears                              -1.38   5.27   6.65 -0.21     0.10 0.06
+## Insomnia                           -1.11   6.04   7.15  0.17    -0.03 0.06
+## Concentration and Memory           -1.92   4.96   6.88 -0.07     0.12 0.06
+## Depressed Mood                     -1.96   5.61   7.57  0.03     0.01 0.07
+## General somatic symptoms: muscular -2.39   5.33   7.72 -0.12    -0.32 0.07
+## General somatic symptoms: sensory  -1.46   4.59   6.05  0.11    -0.35 0.06
+## Cardiovascular symptoms            -2.41   5.23   7.64  0.07    -0.05 0.07
+## Respiratory symptoms               -2.72   4.44   7.16 -0.07    -0.29 0.07
+## Gastro-intestinal symptoms         -2.26   6.53   8.79  0.22     0.49 0.07
+## Genito-urinary symptoms            -2.13   3.86   5.99  0.01    -0.06 0.06
+## Other autonomic symptoms           -2.86   4.55   7.41 -0.29     0.28 0.06
+## id*                                 1.00 350.00 349.00  0.00    -1.21 5.41
+## time                                0.00   0.00   0.00   NaN      NaN 0.00</code></pre>
+<p>Usually we would go on and create a sum score by adding up all the items:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="re-analysis-of-rct-data.html#cb14-1" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>sum <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_bl[, <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>])</span>
+<span id="cb14-2"><a href="re-analysis-of-rct-data.html#cb14-2" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>sum <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_post[, <span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>])</span></code></pre></div>
+<p>Now let us combine the datasets:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="re-analysis-of-rct-data.html#cb15-1" aria-hidden="true" tabindex="-1"></a>data_cluster <span class="ot">=</span> <span class="fu">rbind</span>(data_cluster_bl, data_cluster_post)</span></code></pre></div>
+</div>
+<div id="traditional-approach" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Traditional Approach<a href="re-analysis-of-rct-data.html#traditional-approach" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Plot the data as we usually would using an average group trajectory:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="re-analysis-of-rct-data.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_cluster, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> sum)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="re-analysis-of-rct-data.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="re-analysis-of-rct-data.html#cb16-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="re-analysis-of-rct-data.html#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="re-analysis-of-rct-data.html#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;HAM-A sum&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="re-analysis-of-rct-data.html#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Analyze using LMM:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="re-analysis-of-rct-data.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(sum <span class="sc">~</span> time <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>id), <span class="at">data =</span> data_cluster))</span></code></pre></div>
+<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: sum ~ time + (1 | id)
+##    Data: data_cluster
+## 
+## REML criterion at convergence: 4275.9
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.4157 -0.6507 -0.0258  0.6965  3.2589 
+## 
+## Random effects:
+##  Groups   Name        Variance  Std.Dev. 
+##  id       (Intercept) 5.860e-16 2.421e-08
+##  Residual             2.635e+01 5.133e+00
+## Number of obs: 700, groups:  id, 350
+## 
+## Fixed effects:
+##             Estimate Std. Error       df t value Pr(&gt;|t|)    
+## (Intercept)  23.0323     0.2744 698.0000   83.95   &lt;2e-16 ***
+## time        -12.3096     0.3880 698.0000  -31.73   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##      (Intr)
+## time -0.707
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see ?isSingular</code></pre>
+</div>
+<div id="prepare-for-clustering" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Prepare for Clustering<a href="re-analysis-of-rct-data.html#prepare-for-clustering" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us see if we can find some item clusters in the baseline data to get a more differentiated picture:</p>
+<p>For this we first need to drop the id, sum, and time columns:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="re-analysis-of-rct-data.html#cb20-1" aria-hidden="true" tabindex="-1"></a>data_cluster_bl <span class="ot">=</span> BBmisc<span class="sc">::</span><span class="fu">dropNamed</span>(data_cluster_bl, <span class="at">drop =</span> <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;sum&quot;</span>))</span>
+<span id="cb20-2"><a href="re-analysis-of-rct-data.html#cb20-2" aria-hidden="true" tabindex="-1"></a>data_cluster_post <span class="ot">=</span> BBmisc<span class="sc">::</span><span class="fu">dropNamed</span>(data_cluster_post, <span class="at">drop =</span> <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;sum&quot;</span>))</span></code></pre></div>
+<p>As a first step, it makes sense to scale the data, as not all item formats are identical in all scales:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="re-analysis-of-rct-data.html#cb21-1" aria-hidden="true" tabindex="-1"></a>data_cluster_bl_s <span class="ot">=</span> <span class="fu">scale</span>(data_cluster_bl)</span></code></pre></div>
+<p>Next, we will transpose the data, since we want to cluster items into people and not vice versa:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="re-analysis-of-rct-data.html#cb22-1" aria-hidden="true" tabindex="-1"></a>data_transposed <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">na.omit</span>(data_cluster_bl_s))</span></code></pre></div>
+<p>Now we will creat a distance matrix to determine the proximity between item responses. The euclidean distance is a commonly used measure for psychometric measures (another one is the manhattan distance).</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="re-analysis-of-rct-data.html#cb23-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">dist</span>(data_transposed, <span class="at">method =</span> <span class="st">&quot;euclidean&quot;</span>)</span></code></pre></div>
+<p>And now, let us cluster the data. We use the <code>ward.D2</code> method, this way distances are squared ahead of clustering (no problem with negative data):</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="re-analysis-of-rct-data.html#cb24-1" aria-hidden="true" tabindex="-1"></a>clust <span class="ot">=</span> <span class="fu">hclust</span>(d, <span class="at">method =</span> <span class="st">&quot;ward.D2&quot;</span>)</span></code></pre></div>
+<p>After the clustering is finished we should inspect the result. A common way to look at clustering solutions is the dendrogram:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="re-analysis-of-rct-data.html#cb25-1" aria-hidden="true" tabindex="-1"></a>dend <span class="ot">&lt;-</span> <span class="fu">as.dendrogram</span>(clust, <span class="at">hang =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb25-2"><a href="re-analysis-of-rct-data.html#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="re-analysis-of-rct-data.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">labels_cex</span>(dend) <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb25-4"><a href="re-analysis-of-rct-data.html#cb25-4" aria-hidden="true" tabindex="-1"></a>marg <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">35</span>)</span>
+<span id="cb25-5"><a href="re-analysis-of-rct-data.html#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> marg, <span class="at">font =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.4</span>, <span class="at">cex.axis =</span> <span class="fl">1.7</span>, <span class="at">cex.lab =</span> <span class="dv">2</span>)</span>
+<span id="cb25-6"><a href="re-analysis-of-rct-data.html#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rev</span>(dend), <span class="at">horiz =</span> T, <span class="at">edgePar =</span> <span class="fu">list</span>(<span class="at">lwd =</span> <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>The earlier two items merge in the dendrogram, the more similar they were scored by the patients. We now have a good idea, which items belong together. However, now we need to decide how many clusters to retain, i.e. where to “cut” our dendrogram. This step is called pruning.</p>
+<p>We will use the <code>cutreeDynamic()</code> function from the <code>dynamicTreeCut</code> package. It has many advantages over traditional methods (e.g. gap statistic, silhouette method) including that it is more sensitive for detection of distinct classes and more stable in bootstrapping procedures.</p>
+<p>The argument <code>minClusterSize</code> should be set to 1 and the method should be <code>"hybrid"</code>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="re-analysis-of-rct-data.html#cb26-1" aria-hidden="true" tabindex="-1"></a>pruned <span class="ot">=</span> dynamicTreeCut<span class="sc">::</span><span class="fu">cutreeDynamic</span>(clust, <span class="at">distM =</span> <span class="fu">as.matrix</span>(d), <span class="at">method =</span> <span class="st">&quot;hybrid&quot;</span>, <span class="at">minClusterSize =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>##  ..cutHeight not given, setting it to 31.6  ===&gt;  99% of the (truncated) height range in dendro.
+##  ..done.</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="re-analysis-of-rct-data.html#cb28-1" aria-hidden="true" tabindex="-1"></a>pruned</span></code></pre></div>
+<pre><code>## 1 1 1 2 2 2 4 4 3 3 3 2 4 
+## 2 2 2 1 1 1 4 4 3 3 3 1 4</code></pre>
+<p>The <code>pruned</code> object includes our final clustering solution (i.e. which item belongs to which cluster).</p>
+<p>We should pass the same names to it, that we used for the items:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="re-analysis-of-rct-data.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pruned) <span class="ot">=</span> hama_names</span>
+<span id="cb30-2"><a href="re-analysis-of-rct-data.html#cb30-2" aria-hidden="true" tabindex="-1"></a>pruned</span></code></pre></div>
+<pre><code>##                       Anxious Mood                            Tension 
+##                                  2                                  2 
+##                              Fears                           Insomnia 
+##                                  2                                  1 
+##           Concentration and Memory                     Depressed Mood 
+##                                  1                                  1 
+## General somatic symptoms: muscular  General somatic symptoms: sensory 
+##                                  4                                  4 
+##            Cardiovascular symptoms               Respiratory symptoms 
+##                                  3                                  3 
+##         Gastro-intestinal symptoms            Genito-urinary symptoms 
+##                                  3                                  1 
+##           Other autonomic symptoms 
+##                                  4</code></pre>
+<p>Now we can plot our pruned dendrogram. We will indicate class membership using colours:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="re-analysis-of-rct-data.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">labels_colors</span>(dend) <span class="ot">=</span> pruned[<span class="fu">c</span>(clust<span class="sc">$</span>order)]</span>
+<span id="cb32-2"><a href="re-analysis-of-rct-data.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">labels_cex</span>(dend) <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb32-3"><a href="re-analysis-of-rct-data.html#cb32-3" aria-hidden="true" tabindex="-1"></a>marg <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">35</span>)</span>
+<span id="cb32-4"><a href="re-analysis-of-rct-data.html#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> marg, <span class="at">font =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.4</span>, <span class="at">cex.axis =</span> <span class="fl">1.7</span>, <span class="at">cex.lab =</span> <span class="dv">2</span>)</span>
+<span id="cb32-5"><a href="re-analysis-of-rct-data.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rev</span>(dend), <span class="at">horiz =</span> T, <span class="at">edgePar =</span> <span class="fu">list</span>(<span class="at">lwd =</span> <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="re-analysis-of-rct-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>id <span class="ot">=</span> <span class="fu">row.names</span>(data_cluster_bl)</span>
+<span id="cb33-2"><a href="re-analysis-of-rct-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>time <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb33-3"><a href="re-analysis-of-rct-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>id <span class="ot">=</span> <span class="fu">row.names</span>(data_cluster_post)</span>
+<span id="cb33-4"><a href="re-analysis-of-rct-data.html#cb33-4" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>time <span class="ot">=</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="re-analysis-of-rct-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>sum_c1 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_bl[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb34-2"><a href="re-analysis-of-rct-data.html#cb34-2" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>sum_c2 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_bl[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">2</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">2</span>))</span>
+<span id="cb34-3"><a href="re-analysis-of-rct-data.html#cb34-3" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>sum_c3 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_bl[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">3</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">3</span>))</span>
+<span id="cb34-4"><a href="re-analysis-of-rct-data.html#cb34-4" aria-hidden="true" tabindex="-1"></a>data_cluster_bl<span class="sc">$</span>sum_c4 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_bl[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">4</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">4</span>))</span>
+<span id="cb34-5"><a href="re-analysis-of-rct-data.html#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="re-analysis-of-rct-data.html#cb34-6" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>sum_c1 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_post[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb34-7"><a href="re-analysis-of-rct-data.html#cb34-7" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>sum_c2 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_post[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">2</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb34-8"><a href="re-analysis-of-rct-data.html#cb34-8" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>sum_c3 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_post[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">3</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb34-9"><a href="re-analysis-of-rct-data.html#cb34-9" aria-hidden="true" tabindex="-1"></a>data_cluster_post<span class="sc">$</span>sum_c4 <span class="ot">=</span> <span class="fu">rowSums</span>(data_cluster_post[<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">4</span>)]) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">which</span>(pruned <span class="sc">==</span> <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="re-analysis-of-rct-data.html#cb35-1" aria-hidden="true" tabindex="-1"></a>data_cluster <span class="ot">=</span> <span class="fu">rbind</span>(data_cluster_bl, data_cluster_post)</span>
+<span id="cb35-2"><a href="re-analysis-of-rct-data.html#cb35-2" aria-hidden="true" tabindex="-1"></a>data_cluster_long <span class="ot">=</span> multilevel<span class="sc">::</span><span class="fu">make.univ</span>(data_cluster, data_cluster[,<span class="fu">grep</span>(<span class="st">&quot;sum&quot;</span>, <span class="fu">names</span>(data_cluster))], <span class="at">outname =</span> <span class="st">&quot;Symptoms&quot;</span>)</span>
+<span id="cb35-3"><a href="re-analysis-of-rct-data.html#cb35-3" aria-hidden="true" tabindex="-1"></a>data_cluster_long <span class="ot">=</span> <span class="fu">rename</span>(data_cluster_long, <span class="at">Cluster =</span> TIME)</span>
+<span id="cb35-4"><a href="re-analysis-of-rct-data.html#cb35-4" aria-hidden="true" tabindex="-1"></a>data_cluster_long<span class="sc">$</span>Cluster <span class="ot">=</span> data_cluster_long<span class="sc">$</span>Cluster <span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb35-5"><a href="re-analysis-of-rct-data.html#cb35-5" aria-hidden="true" tabindex="-1"></a>data_cluster_long<span class="sc">$</span>Cluster <span class="ot">=</span> <span class="fu">factor</span>(data_cluster_long<span class="sc">$</span>Cluster)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="re-analysis-of-rct-data.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_cluster_long, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> Symptoms, <span class="at">colour =</span> Cluster)) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="re-analysis-of-rct-data.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="re-analysis-of-rct-data.html#cb36-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="re-analysis-of-rct-data.html#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="re-analysis-of-rct-data.html#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Clusterscore&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="re-analysis-of-rct-data.html#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Let us model change, but now as a function of cluster:</p>
+<p>First let us check the omnibus test:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="re-analysis-of-rct-data.html#cb37-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lmer</span>(Symptoms <span class="sc">~</span> time <span class="sc">*</span> Cluster <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>id), <span class="at">data =</span> data_cluster_long)</span>
+<span id="cb37-2"><a href="re-analysis-of-rct-data.html#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="re-analysis-of-rct-data.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mod)</span></code></pre></div>
+<pre><code>## Type III Analysis of Variance Table with Satterthwaite&#39;s method
+##              Sum Sq Mean Sq NumDF DenDF F value    Pr(&gt;F)    
+## time         889.75  889.75     1  2443 1963.83 &lt; 2.2e-16 ***
+## Cluster      424.03  141.34     3  2443  311.97 &lt; 2.2e-16 ***
+## time:Cluster 388.60  129.53     3  2443  285.90 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>There is a significant Cluster x Time interaction. Let us probe the interaction effect using pairwise comparisons between the cluster-specific slopes:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="re-analysis-of-rct-data.html#cb39-1" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emtrends</span>(mod, <span class="at">specs =</span> pairwise <span class="sc">~</span> Cluster, <span class="at">var =</span> <span class="st">&quot;time&quot;</span>)</span></code></pre></div>
+<pre><code>## $emtrends
+##  Cluster time.trend     SE   df lower.CL upper.CL
+##  1           -0.739 0.0509 2443   -0.839   -0.639
+##  2           -2.396 0.0509 2443   -2.496   -2.296
+##  3           -0.497 0.0509 2443   -0.597   -0.397
+##  4           -0.877 0.0509 2443   -0.977   -0.777
+## 
+## Results are averaged over the levels of: time 
+## Degrees-of-freedom method: kenward-roger 
+## Confidence level used: 0.95 
+## 
+## $contrasts
+##  contrast            estimate    SE   df t.ratio p.value
+##  Cluster1 - Cluster2    1.657 0.072 2443  23.029  &lt;.0001
+##  Cluster1 - Cluster3   -0.242 0.072 2443  -3.363  0.0043
+##  Cluster1 - Cluster4    0.138 0.072 2443   1.920  0.2197
+##  Cluster2 - Cluster3   -1.899 0.072 2443 -26.392  &lt;.0001
+##  Cluster2 - Cluster4   -1.519 0.072 2443 -21.109  &lt;.0001
+##  Cluster3 - Cluster4    0.380 0.072 2443   5.283  &lt;.0001
+## 
+## Results are averaged over the levels of: time 
+## Degrees-of-freedom method: kenward-roger 
+## P value adjustment: tukey method for comparing a family of 4 estimates</code></pre>
+</div>
+</div>
+<div id="exercise-2-response-trajectories" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Exercise 2: Response Trajectories<a href="re-analysis-of-rct-data.html#exercise-2-response-trajectories" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="simulate-practice-data-1" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Simulate Practice Data<a href="re-analysis-of-rct-data.html#simulate-practice-data-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="re-analysis-of-rct-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">350</span> <span class="co"># number of individuals</span></span>
+<span id="cb41-2"><a href="re-analysis-of-rct-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>   <span class="co"># number of time periods</span></span>
+<span id="cb41-3"><a href="re-analysis-of-rct-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="re-analysis-of-rct-data.html#cb41-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">expand.grid</span>(<span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">max</span>(t),</span>
+<span id="cb41-5"><a href="re-analysis-of-rct-data.html#cb41-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb41-6"><a href="re-analysis-of-rct-data.html#cb41-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>group <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;active&quot;</span>, <span class="fu">nrow</span>(df)<span class="sc">/</span><span class="dv">2</span>), <span class="fu">rep</span>(<span class="st">&quot;placebo&quot;</span>, <span class="fu">nrow</span>(df)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb41-7"><a href="re-analysis-of-rct-data.html#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="re-analysis-of-rct-data.html#cb41-8" aria-hidden="true" tabindex="-1"></a>trajectory <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Linear response&quot;</span>,</span>
+<span id="cb41-9"><a href="re-analysis-of-rct-data.html#cb41-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Deteriorate&quot;</span>,</span>
+<span id="cb41-10"><a href="re-analysis-of-rct-data.html#cb41-10" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Rev. U-shape&quot;</span>,</span>
+<span id="cb41-11"><a href="re-analysis-of-rct-data.html#cb41-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Rapid response&quot;</span>,</span>
+<span id="cb41-12"><a href="re-analysis-of-rct-data.html#cb41-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;No change&quot;</span>)</span>
+<span id="cb41-13"><a href="re-analysis-of-rct-data.html#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-14"><a href="re-analysis-of-rct-data.html#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb41-15"><a href="re-analysis-of-rct-data.html#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ch <span class="cf">in</span> <span class="fu">unique</span>(df<span class="sc">$</span>id)){</span>
+<span id="cb41-16"><a href="re-analysis-of-rct-data.html#cb41-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-17"><a href="re-analysis-of-rct-data.html#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>group[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;active&quot;</span>){</span>
+<span id="cb41-18"><a href="re-analysis-of-rct-data.html#cb41-18" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">sample</span>(trajectory, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">05</span>, .<span class="dv">2</span>, .<span class="dv">2</span>, .<span class="dv">05</span>)), <span class="fu">max</span>(t))</span>
+<span id="cb41-19"><a href="re-analysis-of-rct-data.html#cb41-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-20"><a href="re-analysis-of-rct-data.html#cb41-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>group[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;placebo&quot;</span>){</span>
+<span id="cb41-21"><a href="re-analysis-of-rct-data.html#cb41-21" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">sample</span>(trajectory, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">2</span>, .<span class="dv">2</span>, .<span class="dv">1</span>, .<span class="dv">05</span>, .<span class="dv">45</span>)), <span class="fu">max</span>(t))</span>
+<span id="cb41-22"><a href="re-analysis-of-rct-data.html#cb41-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-23"><a href="re-analysis-of-rct-data.html#cb41-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-24"><a href="re-analysis-of-rct-data.html#cb41-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;No change&quot;</span>){</span>
+<span id="cb41-25"><a href="re-analysis-of-rct-data.html#cb41-25" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>y[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="dv">24</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>t  <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(df[df<span class="sc">$</span>id <span class="sc">==</span> ch,]), <span class="dv">0</span>, <span class="dv">3</span>)</span>
+<span id="cb41-26"><a href="re-analysis-of-rct-data.html#cb41-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-27"><a href="re-analysis-of-rct-data.html#cb41-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;Rev. U-shape&quot;</span>){</span>
+<span id="cb41-28"><a href="re-analysis-of-rct-data.html#cb41-28" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>y[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="dv">24</span> <span class="sc">+</span> <span class="dv">8</span><span class="sc">*</span>t <span class="sc">-</span> <span class="fl">0.9</span><span class="sc">*</span>t<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(df[df<span class="sc">$</span>id <span class="sc">==</span> ch,]), <span class="dv">0</span>, <span class="dv">3</span>)</span>
+<span id="cb41-29"><a href="re-analysis-of-rct-data.html#cb41-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-30"><a href="re-analysis-of-rct-data.html#cb41-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;Linear response&quot;</span>){</span>
+<span id="cb41-31"><a href="re-analysis-of-rct-data.html#cb41-31" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>y[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="dv">24</span> <span class="sc">-</span> <span class="dv">1</span><span class="sc">*</span>t  <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(df[df<span class="sc">$</span>id <span class="sc">==</span> ch,]), <span class="dv">0</span>, <span class="dv">3</span>)</span>
+<span id="cb41-32"><a href="re-analysis-of-rct-data.html#cb41-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-33"><a href="re-analysis-of-rct-data.html#cb41-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;Deteriorate&quot;</span>){</span>
+<span id="cb41-34"><a href="re-analysis-of-rct-data.html#cb41-34" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>y[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="dv">24</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>t  <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(df[df<span class="sc">$</span>id <span class="sc">==</span> ch,]), <span class="dv">0</span>, <span class="dv">3</span>)</span>
+<span id="cb41-35"><a href="re-analysis-of-rct-data.html#cb41-35" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-36"><a href="re-analysis-of-rct-data.html#cb41-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(df<span class="sc">$</span>trajectory[df<span class="sc">$</span>id <span class="sc">==</span> ch][<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;Rapid response&quot;</span>){</span>
+<span id="cb41-37"><a href="re-analysis-of-rct-data.html#cb41-37" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>y[df<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> <span class="dv">24</span> <span class="sc">-</span> <span class="dv">10</span> <span class="sc">*</span> <span class="fu">log</span>(t) <span class="sc">+</span>  <span class="fu">rnorm</span>(<span class="fu">nrow</span>(df[df<span class="sc">$</span>id <span class="sc">==</span> ch,]), <span class="dv">0</span>, <span class="dv">3</span>)</span>
+<span id="cb41-38"><a href="re-analysis-of-rct-data.html#cb41-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-39"><a href="re-analysis-of-rct-data.html#cb41-39" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="inspect-the-data" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Inspect the Data<a href="re-analysis-of-rct-data.html#inspect-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Plot the data as we usually would (one trajectory per group)</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="re-analysis-of-rct-data.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> y, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="re-analysis-of-rct-data.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>) <span class="sc">+</span></span>
+<span id="cb42-3"><a href="re-analysis-of-rct-data.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;point&quot;</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="re-analysis-of-rct-data.html#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> t) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="re-analysis-of-rct-data.html#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">50</span>)) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="re-analysis-of-rct-data.html#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Time&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;Group&quot;</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="re-analysis-of-rct-data.html#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>Analyze using linear mixed model:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="re-analysis-of-rct-data.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb43-2"><a href="re-analysis-of-rct-data.html#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
+<span id="cb43-3"><a href="re-analysis-of-rct-data.html#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="re-analysis-of-rct-data.html#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(y <span class="sc">~</span> t <span class="sc">*</span> group <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>id), <span class="at">data =</span> df))</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
+## lmerModLmerTest]
+## Formula: y ~ t * group + (1 | id)
+##    Data: df
+## 
+## REML criterion at convergence: 22778.7
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -4.4769 -0.5261 -0.0116  0.5401  3.7271 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  id       (Intercept) 61.64    7.851   
+##  Residual             28.74    5.361   
+## Number of obs: 3500, groups:  id, 350
+## 
+## Fixed effects:
+##                  Estimate Std. Error         df t value Pr(&gt;|t|)    
+## (Intercept)      27.73980    0.65488  469.59512  42.358   &lt;2e-16 ***
+## t                -1.25607    0.04462 3148.00004 -28.152   &lt;2e-16 ***
+## groupplacebo     -2.05383    0.92614  469.59513  -2.218   0.0271 *  
+## t:groupplacebo    1.07806    0.06310 3148.00002  17.085   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) t      grpplc
+## t           -0.375              
+## groupplaceb -0.707  0.265       
+## t:groupplcb  0.265 -0.707 -0.375</code></pre>
+<p>Plot data on individual change groups (without the mixture model, we usually do not know these in advance):</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="re-analysis-of-rct-data.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> y, <span class="at">colour =</span> trajectory)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="re-analysis-of-rct-data.html#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb45-3"><a href="re-analysis-of-rct-data.html#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> t) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="re-analysis-of-rct-data.html#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">50</span>)) <span class="sc">+</span></span>
+<span id="cb45-5"><a href="re-analysis-of-rct-data.html#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(trajectory), <span class="at">rows =</span> <span class="fu">vars</span>(group)) <span class="sc">+</span></span>
+<span id="cb45-6"><a href="re-analysis-of-rct-data.html#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&quot;trajectory&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>) <span class="sc">+</span></span>
+<span id="cb45-7"><a href="re-analysis-of-rct-data.html#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+</div>
+<div id="create-lclmm" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Create LCLMM<a href="re-analysis-of-rct-data.html#create-lclmm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To identify reasonable grouping categories for these individually improving patients, we need to build a latent model.</p>
+<p>Let us compute a growth mixtue model aka. latent class linear mixed models (LCLMM). We use the package <code>lcmm</code> for this.</p>
+<ul>
+<li><p>The <code>fixed</code> argument is a formula, as we know it from mixed models. We determine a polynomial here (usually quadratic or cubic as this is how most symptoms have been shown to change).</p></li>
+<li><p>The <code>mixture</code> argument specifies class-specific fixed effects. These are the change parameters the trajectories are defined on</p></li>
+<li><p>The <code>mixture</code> argument specifies a random argument as in the LMM. May be <code>~ 1</code> for random intercepts or <code>1 + t</code> for random intercepts and slopes.</p></li>
+<li><p>The <code>ng</code> argument specifies the number of classes to be extracted. We will learn in a second how the optimal number of classes can be determined.</p></li>
+<li><p>The <code>subject</code> argument specifies the nesting structure due to the repeated measurements.</p></li>
+</ul>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="re-analysis-of-rct-data.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lcmm)</span>
+<span id="cb46-2"><a href="re-analysis-of-rct-data.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(LCTMtools)</span>
+<span id="cb46-3"><a href="re-analysis-of-rct-data.html#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="re-analysis-of-rct-data.html#cb46-4" aria-hidden="true" tabindex="-1"></a>mi <span class="ot">=</span> lcmm<span class="sc">::</span><span class="fu">hlme</span>(<span class="at">fixed =</span> y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb46-5"><a href="re-analysis-of-rct-data.html#cb46-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">mixture =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb46-6"><a href="re-analysis-of-rct-data.html#cb46-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb46-7"><a href="re-analysis-of-rct-data.html#cb46-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">ng =</span> <span class="dv">5</span>,</span>
+<span id="cb46-8"><a href="re-analysis-of-rct-data.html#cb46-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> df,</span>
+<span id="cb46-9"><a href="re-analysis-of-rct-data.html#cb46-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">subject =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## Be patient, hlme is running ... 
+## The program took 7.15 seconds</code></pre>
+</div>
+<div id="inspect-the-lclmm-model" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Inspect the LCLMM Model<a href="re-analysis-of-rct-data.html#inspect-the-lclmm-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us check the mixture object <code>mi</code>:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="re-analysis-of-rct-data.html#cb48-1" aria-hidden="true" tabindex="-1"></a>mi</span></code></pre></div>
+<pre><code>## Heterogenous linear mixed model 
+##      fitted by maximum likelihood method 
+##  
+## lcmm::hlme(fixed = y ~ 1 + t + I(t^2), mixture = ~1 + t + I(t^2), 
+##     random = ~1, subject = &quot;id&quot;, ng = 5, data = df)
+##  
+## Statistical Model: 
+##      Dataset: df 
+##      Number of subjects: 350 
+##      Number of observations: 3500 
+##      Number of latent classes: 5 
+##      Number of parameters: 21  
+##  
+## Iteration process: 
+##      Convergence criteria satisfied 
+##      Number of iterations:  20 
+##      Convergence criteria: parameters= 2.1e-09 
+##                          : likelihood= 3e-06 
+##                          : second derivatives= 1.6e-05 
+##  
+## Goodness-of-fit statistics: 
+##      maximum log-likelihood: -9352.41  
+##      AIC: 18746.83  
+##      BIC: 18827.84  
+##  
+## </code></pre>
+<p>We can see an overview over our selected parameters and that the model has converged fine. We also get a selection of goodness-of-fit statistics, that we could use for model selection.</p>
+<p>We can inspect the model further: The <code>LCTMtoolkit()</code> function gives us a convenient print out for the quality of our model and also displays some benchmark for orientation</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="re-analysis-of-rct-data.html#cb50-1" aria-hidden="true" tabindex="-1"></a>LCTMtoolkit_total <span class="ot">=</span> <span class="fu">LCTMtoolkit</span>(mi)</span></code></pre></div>
+<pre><code>## [1] &quot;class(model) type required to be hlme, lcmm or an imported PROC TRAJ object from SAS&quot;
+## $`Class-specific`
+##          Class_1  Class_2  Class_3 Class_4 Class_5   Recommendation
+## APPA           1    0.999     1.00       1       1 Greater than 0.7
+## OCC          Inf 1479.031 73048.39     Inf     Inf   Greater than 5
+## Mismatch       0    0.000     0.00       0       0    Close to zero
+## 
+## $`Model-specific`
+##                      Model Recommendation
+## Entropy              0.463  Close to zero
+## Relative_entropy     0.999     Close to 1
+## BIC              18827.842              -
+## AIC              18746.826              -</code></pre>
+<p>The <code>postprob()</code> function displays posterior classifications (i.e. group membership frequencies) for all extracted classes.</p>
+<p>Often we want to define a minimum cutoff for clinical relevance (e.g. min. 5% capture of all patients):</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="re-analysis-of-rct-data.html#cb52-1" aria-hidden="true" tabindex="-1"></a>postprob_total <span class="ot">=</span> lcmm<span class="sc">::</span><span class="fu">postprob</span>(mi)</span></code></pre></div>
+<pre><code>##  
+## Posterior classification: 
+##   class1 class2 class3 class4 class5
+## N  45.00 128.00  83.00  52.00     42
+## %  12.86  36.57  23.71  14.86     12
+##  
+## Posterior classification table: 
+##      --&gt; mean of posterior probabilities in each class 
+##        prob1  prob2  prob3 prob4 prob5
+## class1     1 0.0000 0.0000     0     0
+## class2     0 0.9988 0.0012     0     0
+## class3     0 0.0000 1.0000     0     0
+## class4     0 0.0000 0.0000     1     0
+## class5     0 0.0000 0.0000     0     1
+##  
+## Posterior probabilities above a threshold (%): 
+##          class1 class2 class3 class4 class5
+## prob&gt;0.7    100 100.00    100    100    100
+## prob&gt;0.8    100 100.00    100    100    100
+## prob&gt;0.9    100  99.22    100    100    100
+## </code></pre>
+</div>
+<div id="plot-lclmm-model-predictions" class="section level3 hasAnchor" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Plot LCLMM Model Predictions<a href="re-analysis-of-rct-data.html#plot-lclmm-model-predictions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Create custom function for LCLMM plotting:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="re-analysis-of-rct-data.html#cb54-1" aria-hidden="true" tabindex="-1"></a>plot_traj <span class="ot">=</span> <span class="cf">function</span>(mi, data, var.time){</span>
+<span id="cb54-2"><a href="re-analysis-of-rct-data.html#cb54-2" aria-hidden="true" tabindex="-1"></a>  datnew   <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(data[, var.time]), <span class="at">length =</span> <span class="dv">100</span>))</span>
+<span id="cb54-3"><a href="re-analysis-of-rct-data.html#cb54-3" aria-hidden="true" tabindex="-1"></a>  plotpred <span class="ot">&lt;-</span> lcmm<span class="sc">::</span><span class="fu">predictY</span>(mi, datnew, <span class="at">var.time =</span> var.time, <span class="at">draws =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb54-4"><a href="re-analysis-of-rct-data.html#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="re-analysis-of-rct-data.html#cb54-5" aria-hidden="true" tabindex="-1"></a>  frame_traj <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">expand.grid</span>(<span class="at">Time =</span> plotpred<span class="sc">$</span>times<span class="sc">$</span>t,</span>
+<span id="cb54-6"><a href="re-analysis-of-rct-data.html#cb54-6" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">trajectory =</span> <span class="fu">unique</span>(mi<span class="sc">$</span>pprob<span class="sc">$</span>class),</span>
+<span id="cb54-7"><a href="re-analysis-of-rct-data.html#cb54-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">pred =</span> <span class="cn">NA</span>,</span>
+<span id="cb54-8"><a href="re-analysis-of-rct-data.html#cb54-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">upper =</span> <span class="cn">NA</span>,</span>
+<span id="cb54-9"><a href="re-analysis-of-rct-data.html#cb54-9" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">lower =</span> <span class="cn">NA</span>))</span>
+<span id="cb54-10"><a href="re-analysis-of-rct-data.html#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="re-analysis-of-rct-data.html#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(traj <span class="cf">in</span> <span class="fu">unique</span>(frame_traj<span class="sc">$</span>trajectory)){</span>
+<span id="cb54-12"><a href="re-analysis-of-rct-data.html#cb54-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb54-13"><a href="re-analysis-of-rct-data.html#cb54-13" aria-hidden="true" tabindex="-1"></a>      frame_traj<span class="sc">$</span>pred[frame_traj<span class="sc">$</span>trajectory <span class="sc">==</span> traj][i] <span class="ot">=</span> plotpred<span class="sc">$</span>pred[,<span class="fu">which</span>(<span class="fu">grepl</span>(<span class="fu">paste0</span>(<span class="st">&quot;^Ypred_class&quot;</span>, <span class="fu">as.character</span>(traj)), <span class="fu">colnames</span>(plotpred<span class="sc">$</span>pred)))][i]</span>
+<span id="cb54-14"><a href="re-analysis-of-rct-data.html#cb54-14" aria-hidden="true" tabindex="-1"></a>      frame_traj<span class="sc">$</span>upper[frame_traj<span class="sc">$</span>trajectory <span class="sc">==</span> traj][i] <span class="ot">=</span> plotpred<span class="sc">$</span>pred[,<span class="fu">which</span>(<span class="fu">grepl</span>(<span class="fu">paste0</span>(<span class="st">&quot;^lower.Ypred_class&quot;</span>, <span class="fu">as.character</span>(traj)), <span class="fu">colnames</span>(plotpred<span class="sc">$</span>pred)))][i]</span>
+<span id="cb54-15"><a href="re-analysis-of-rct-data.html#cb54-15" aria-hidden="true" tabindex="-1"></a>      frame_traj<span class="sc">$</span>lower[frame_traj<span class="sc">$</span>trajectory <span class="sc">==</span> traj][i] <span class="ot">=</span> plotpred<span class="sc">$</span>pred[,<span class="fu">which</span>(<span class="fu">grepl</span>(<span class="fu">paste0</span>(<span class="st">&quot;^upper.Ypred_class&quot;</span>, <span class="fu">as.character</span>(traj)), <span class="fu">colnames</span>(plotpred<span class="sc">$</span>pred)))][i]</span>
+<span id="cb54-16"><a href="re-analysis-of-rct-data.html#cb54-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb54-17"><a href="re-analysis-of-rct-data.html#cb54-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb54-18"><a href="re-analysis-of-rct-data.html#cb54-18" aria-hidden="true" tabindex="-1"></a>  frame_traj<span class="sc">$</span>trajectory <span class="ot">=</span> <span class="fu">factor</span>(frame_traj<span class="sc">$</span>trajectory)</span>
+<span id="cb54-19"><a href="re-analysis-of-rct-data.html#cb54-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">ggplot</span>(<span class="at">data =</span> frame_traj, <span class="fu">aes</span>(<span class="at">x =</span> Time, <span class="at">y =</span> pred, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper)) <span class="sc">+</span></span>
+<span id="cb54-20"><a href="re-analysis-of-rct-data.html#cb54-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_vline(xintercept = c(5, 10, 14, 17), linetype = &quot;dotted&quot;) +</span></span>
+<span id="cb54-21"><a href="re-analysis-of-rct-data.html#cb54-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">colour =</span> trajectory)) <span class="sc">+</span></span>
+<span id="cb54-22"><a href="re-analysis-of-rct-data.html#cb54-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Predicted&quot;</span>) <span class="sc">+</span></span>
+<span id="cb54-23"><a href="re-analysis-of-rct-data.html#cb54-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">fill =</span> trajectory), <span class="at">alpha =</span> .<span class="dv">2</span>, <span class="at">linetype =</span> <span class="st">&quot;dotted&quot;</span>) <span class="sc">+</span></span>
+<span id="cb54-24"><a href="re-analysis-of-rct-data.html#cb54-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>())</span>
+<span id="cb54-25"><a href="re-analysis-of-rct-data.html#cb54-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Plot the result:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="re-analysis-of-rct-data.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_traj</span>(mi, df, <span class="st">&quot;t&quot;</span>)</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p>Let us check the graph next to the empirical data:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="re-analysis-of-rct-data.html#cb56-1" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(<span class="fu">ggplot</span>(<span class="at">data =</span> df, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> y, <span class="at">colour =</span> trajectory)) <span class="sc">+</span></span>
+<span id="cb56-2"><a href="re-analysis-of-rct-data.html#cb56-2" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb56-3"><a href="re-analysis-of-rct-data.html#cb56-3" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> t) <span class="sc">+</span></span>
+<span id="cb56-4"><a href="re-analysis-of-rct-data.html#cb56-4" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">50</span>)) <span class="sc">+</span></span>
+<span id="cb56-5"><a href="re-analysis-of-rct-data.html#cb56-5" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(trajectory), <span class="at">rows =</span> <span class="fu">vars</span>(group)) <span class="sc">+</span></span>
+<span id="cb56-6"><a href="re-analysis-of-rct-data.html#cb56-6" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&quot;Trajectory&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>) <span class="sc">+</span></span>
+<span id="cb56-7"><a href="re-analysis-of-rct-data.html#cb56-7" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">theme_classic</span>(),</span>
+<span id="cb56-8"><a href="re-analysis-of-rct-data.html#cb56-8" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">plot_traj</span>(mi, df, <span class="st">&quot;t&quot;</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="DZP_R_bookdown_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+</div>
+<div id="transfer-class-membership-to-original-dataset" class="section level3 hasAnchor" number="3.2.6">
+<h3><span class="header-section-number">3.2.6</span> Transfer class membership to original dataset<a href="re-analysis-of-rct-data.html#transfer-class-membership-to-original-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Now we should transfer the determined class to our empirical dataset. Otherwise, we will not be able to run models using the trajectories.</p>
+<p>In addition, we extract the certainty, that each person was classified to a category with (the <code>pprob</code> variable in the <code>mi</code> object). Using these probability values we can weigh later models for categorization uncertainty.</p>
+<p>Create custom function for transfer:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="re-analysis-of-rct-data.html#cb57-1" aria-hidden="true" tabindex="-1"></a>transfer_class <span class="ot">=</span> <span class="cf">function</span>(data, mi){</span>
+<span id="cb57-2"><a href="re-analysis-of-rct-data.html#cb57-2" aria-hidden="true" tabindex="-1"></a>  data<span class="sc">$</span>class <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb57-3"><a href="re-analysis-of-rct-data.html#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(ch <span class="cf">in</span> <span class="fu">unique</span>(data<span class="sc">$</span>id)){</span>
+<span id="cb57-4"><a href="re-analysis-of-rct-data.html#cb57-4" aria-hidden="true" tabindex="-1"></a>    data<span class="sc">$</span>class[data<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> mi<span class="sc">$</span>pprob<span class="sc">$</span>class[mi<span class="sc">$</span>pprob<span class="sc">$</span>id <span class="sc">==</span> ch]</span>
+<span id="cb57-5"><a href="re-analysis-of-rct-data.html#cb57-5" aria-hidden="true" tabindex="-1"></a>    data<span class="sc">$</span>weight[data<span class="sc">$</span>id <span class="sc">==</span> ch] <span class="ot">=</span> mi<span class="sc">$</span>pprob[mi<span class="sc">$</span>pprob<span class="sc">$</span>id <span class="sc">==</span> ch, <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="fu">paste0</span>(<span class="st">&quot;prob&quot;</span>, <span class="fu">as.character</span>(mi<span class="sc">$</span>pprob<span class="sc">$</span>class[mi<span class="sc">$</span>pprob<span class="sc">$</span>id <span class="sc">==</span> ch])), <span class="fu">colnames</span>(mi<span class="sc">$</span>pprob)))]</span>
+<span id="cb57-6"><a href="re-analysis-of-rct-data.html#cb57-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb57-7"><a href="re-analysis-of-rct-data.html#cb57-7" aria-hidden="true" tabindex="-1"></a>  data<span class="sc">$</span>class <span class="ot">=</span> <span class="fu">factor</span>(data<span class="sc">$</span>class)</span>
+<span id="cb57-8"><a href="re-analysis-of-rct-data.html#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
+<span id="cb57-9"><a href="re-analysis-of-rct-data.html#cb57-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Transfer data to our original dataframe <code>df</code>:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="re-analysis-of-rct-data.html#cb58-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">transfer_class</span>(<span class="at">data =</span> df, <span class="at">mi =</span> mi)</span></code></pre></div>
+<p>Create data in wide format:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="re-analysis-of-rct-data.html#cb59-1" aria-hidden="true" tabindex="-1"></a>df_wide <span class="ot">=</span> <span class="fu">as.data.frame</span>(df <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="re-analysis-of-rct-data.html#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> t, <span class="at">values_from =</span> y))</span>
+<span id="cb59-3"><a href="re-analysis-of-rct-data.html#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="re-analysis-of-rct-data.html#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(df_wide<span class="sc">$</span>class) <span class="ot">=</span> <span class="fu">c</span>( <span class="st">&quot;Rapid response&quot;</span>,</span>
+<span id="cb59-5"><a href="re-analysis-of-rct-data.html#cb59-5" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&quot;Linear response&quot;</span>,</span>
+<span id="cb59-6"><a href="re-analysis-of-rct-data.html#cb59-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&quot;No change&quot;</span>,</span>
+<span id="cb59-7"><a href="re-analysis-of-rct-data.html#cb59-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&quot;Rev. U-shape&quot;</span>,</span>
+<span id="cb59-8"><a href="re-analysis-of-rct-data.html#cb59-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&quot;Deteriorate&quot;</span>)</span></code></pre></div>
+</div>
+<div id="modeling-class-membership-as-dependent-variable" class="section level3 hasAnchor" number="3.2.7">
+<h3><span class="header-section-number">3.2.7</span> Modeling class membership as dependent variable<a href="re-analysis-of-rct-data.html#modeling-class-membership-as-dependent-variable" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can check the dispersion of the trajectory class variable within the 2 treatment groups using <code>table()</code>:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="re-analysis-of-rct-data.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df_wide<span class="sc">$</span>class, df_wide<span class="sc">$</span>group)</span></code></pre></div>
+<pre><code>##                  
+##                   active placebo
+##   Rapid response      33      12
+##   Linear response     90      38
+##   No change            8      75
+##   Rev. U-shape        35      17
+##   Deteriorate          9      33</code></pre>
+<p>If we want to use trajectory class membership as the dependent variable, we need to used a logistic-regression model (because <code>class</code> is a categorical variable). Since we usually have more than 2 trajectory classes, we will use a multinomial logistic-regression model.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="re-analysis-of-rct-data.html#cb62-1" aria-hidden="true" tabindex="-1"></a>multinom <span class="ot">=</span> nnet<span class="sc">::</span><span class="fu">multinom</span>(class <span class="sc">~</span> group, <span class="at">data =</span> df_wide, <span class="at">weights =</span> weight)</span></code></pre></div>
+<pre><code>## # weights:  15 (8 variable)
+## initial  value 563.055666 
+## iter  10 value 471.814704
+## final  value 470.947184 
+## converged</code></pre>
+<p>For an omnibus test, we can use a chi-square-likelihood-ratio test:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="re-analysis-of-rct-data.html#cb64-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(multinom)</span></code></pre></div>
+<pre><code>## # weights:  10 (4 variable)
+## initial  value 563.055666 
+## final  value 528.549964 
+## converged</code></pre>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: class
+##       LR Chisq Df Pr(&gt;Chisq)    
+## group   115.21  4  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>For pairwise comparisons we can use the <code>emmeans</code> package:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="re-analysis-of-rct-data.html#cb67-1" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">lsmeans</span>(multinom, pairwise <span class="sc">~</span> group <span class="sc">|</span> class, <span class="at">adjust=</span><span class="st">&quot;tukey&quot;</span>, <span class="at">mode =</span> <span class="st">&quot;prob&quot;</span>)</span></code></pre></div>
+<pre><code>## $lsmeans
+## class = Rapid response:
+##  group     prob     SE df lower.CL upper.CL
+##  active  0.1887 0.0296  8  0.12049   0.2570
+##  placebo 0.0686 0.0191  8  0.02452   0.1126
+## 
+## class = Linear response:
+##  group     prob     SE df lower.CL upper.CL
+##  active  0.5139 0.0378  8  0.42671   0.6010
+##  placebo 0.2171 0.0312  8  0.14527   0.2890
+## 
+## class = No change:
+##  group     prob     SE df lower.CL upper.CL
+##  active  0.0458 0.0158  8  0.00931   0.0822
+##  placebo 0.4286 0.0374  8  0.34230   0.5148
+## 
+## class = Rev. U-shape:
+##  group     prob     SE df lower.CL upper.CL
+##  active  0.2002 0.0303  8  0.13039   0.2699
+##  placebo 0.0971 0.0224  8  0.04552   0.1488
+## 
+## class = Deteriorate:
+##  group     prob     SE df lower.CL upper.CL
+##  active  0.0515 0.0167  8  0.01294   0.0900
+##  placebo 0.1886 0.0296  8  0.12039   0.2568
+## 
+## Confidence level used: 0.95 
+## 
+## $contrasts
+## class = Rapid response:
+##  contrast         estimate     SE df t.ratio p.value
+##  active - placebo    0.120 0.0352  8   3.411  0.0092
+## 
+## class = Linear response:
+##  contrast         estimate     SE df t.ratio p.value
+##  active - placebo    0.297 0.0490  8   6.057  0.0003
+## 
+## class = No change:
+##  contrast         estimate     SE df t.ratio p.value
+##  active - placebo   -0.383 0.0406  8  -9.427  &lt;.0001
+## 
+## class = Rev. U-shape:
+##  contrast         estimate     SE df t.ratio p.value
+##  active - placebo    0.103 0.0376  8   2.737  0.0256
+## 
+## class = Deteriorate:
+##  contrast         estimate     SE df t.ratio p.value
+##  active - placebo   -0.137 0.0340  8  -4.037  0.0038</code></pre>
+<p>Estimates are displayed as log-odds, so we have to exponentiate them using <code>exp()</code> to get interpretable odds ratios (OR).</p>
+</div>
+<div id="determine-the-optimal-model" class="section level3 hasAnchor" number="3.2.8">
+<h3><span class="header-section-number">3.2.8</span> Determine the optimal model<a href="re-analysis-of-rct-data.html#determine-the-optimal-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the previous dataset, we have</p>
+<ol style="list-style-type: decimal">
+<li>used a qudratic polynomial</li>
+<li>extracted 5 groups</li>
+<li>allowed free variation of the intercept as the random effect.</li>
+</ol>
+<p>However, usually we operate on a more data-driven approach, i.e. without knowing these parameters in advance.</p>
+<p>There are several statistical criteria to determine a mode that optimally describes the data. For LCLMM, the most commonly used ones are:</p>
+<ul>
+<li>Bayesian Information Criterion (BIC)
+<ul>
+<li>lower values on these information criteria indicate better fitting models</li>
+<li>models that do not fit better than the baseline model can be dismissed, and a selection of the best fitting models can be carried forward and examined further</li>
+</ul></li>
+<li>Entropy
+<ul>
+<li>ranges from 0.00 to 1.00</li>
+<li>high values of entropy (&gt; .80) indicate that individuals are classified with confidence</li>
+<li>models with higher entropy are favored</li>
+</ul></li>
+<li>Adjusted Lo-Mendell-Rubin likelihood ratio test
+<ul>
+<li>corrected likelihood-ratio distribution (a chi-square distribution is inappropriate) to compare models with C and C – 1 unobserved groups</li>
+<li>likelihood ratio tests compare models that differ only in the number of classes</li>
+<li>significance test (p&lt; .05) indicates that the model with C – 1 classes should be rejected in favor of the model with C classes</li>
+</ul></li>
+</ul>
+</div>
+<div id="selection-loop" class="section level3 hasAnchor" number="3.2.9">
+<h3><span class="header-section-number">3.2.9</span> Selection loop<a href="re-analysis-of-rct-data.html#selection-loop" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To try this, let us run a model selection based on the Bayesian Information Criterion (BIC).</p>
+<p>Since we have to test a lot of parameters, we run the model fitting procedure in a loop and save the results in a container:</p>
+<p>This procedure can take quite a while, so we’ll test it in a smaller dataset:</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="re-analysis-of-rct-data.html#cb69-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/stephangoerigk/DZP_Workshop_Slides/master/test.csv&quot;</span>)</span></code></pre></div>
+<p>Inspect the data:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="re-analysis-of-rct-data.html#cb70-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describe</span>(test)</span></code></pre></div>
+<pre><code>##        vars    n   mean     sd median trimmed    mad   min    max  range  skew
+## X         1 1680 200.29 113.20  219.4  204.98 150.48  1.00 352.80 351.80 -0.26
+## group*    2 1680   1.50   0.50    1.5    1.50   0.74  1.00   2.00   1.00  0.00
+## t         3 1680   4.50   2.87    4.5    4.50   3.71  0.00   9.00   9.00  0.00
+## stress    4 1677  43.39  30.65   48.0   42.29  39.56 -2.79 101.98 104.77  0.14
+## id        5 1680 200.02 113.20  219.0  204.71 150.48  1.00 352.00 351.00 -0.26
+##        kurtosis   se
+## X         -1.38 2.76
+## group*    -2.00 0.01
+## t         -1.23 0.07
+## stress    -1.07 0.75
+## id        -1.38 2.76</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="re-analysis-of-rct-data.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(test)</span></code></pre></div>
+<pre><code>##      X   group t    stress id
+## 1 39.0 Healthy 0 80.199113 39
+## 2 39.2 Healthy 1 70.188702 39
+## 3 39.4 Healthy 2 50.653667 39
+## 4 39.6 Healthy 3 16.588692 39
+## 5 39.8 Healthy 4 -2.031454 39
+## 6 39.1 Healthy 5 -1.285336 39</code></pre>
+<p>Let us first set up a container:</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="re-analysis-of-rct-data.html#cb74-1" aria-hidden="true" tabindex="-1"></a>results_total <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">ng =</span> <span class="cn">NA</span>,</span>
+<span id="cb74-2"><a href="re-analysis-of-rct-data.html#cb74-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Polynomial =</span> <span class="cn">NA</span>,</span>
+<span id="cb74-3"><a href="re-analysis-of-rct-data.html#cb74-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Random =</span> <span class="cn">NA</span>,</span>
+<span id="cb74-4"><a href="re-analysis-of-rct-data.html#cb74-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">BIC =</span> <span class="cn">NA</span>,</span>
+<span id="cb74-5"><a href="re-analysis-of-rct-data.html#cb74-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">AIC =</span> <span class="cn">NA</span>,</span>
+<span id="cb74-6"><a href="re-analysis-of-rct-data.html#cb74-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">loglik =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<p>We will run out loop for 2:5 groups,quadratic vs. cubic polynomial and different random effect compositions:</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="re-analysis-of-rct-data.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">222</span>)</span>
+<span id="cb75-2"><a href="re-analysis-of-rct-data.html#cb75-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-3"><a href="re-analysis-of-rct-data.html#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(ng <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>){</span>
+<span id="cb75-4"><a href="re-analysis-of-rct-data.html#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(random <span class="cf">in</span> <span class="fu">c</span>(<span class="st">&quot;~ 1&quot;</span>, <span class="st">&quot;~ 1 + t&quot;</span>)){</span>
+<span id="cb75-5"><a href="re-analysis-of-rct-data.html#cb75-5" aria-hidden="true" tabindex="-1"></a>    mi_sq <span class="ot">&lt;-</span> lcmm<span class="sc">::</span><span class="fu">hlme</span>(<span class="at">fixed =</span> stress <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb75-6"><a href="re-analysis-of-rct-data.html#cb75-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">mixture =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb75-7"><a href="re-analysis-of-rct-data.html#cb75-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">random =</span> <span class="fu">as.formula</span>(random),</span>
+<span id="cb75-8"><a href="re-analysis-of-rct-data.html#cb75-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ng =</span> ng,</span>
+<span id="cb75-9"><a href="re-analysis-of-rct-data.html#cb75-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nwg =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb75-10"><a href="re-analysis-of-rct-data.html#cb75-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">idiag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb75-11"><a href="re-analysis-of-rct-data.html#cb75-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> test,</span>
+<span id="cb75-12"><a href="re-analysis-of-rct-data.html#cb75-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">subject =</span> <span class="st">&quot;id&quot;</span>)</span>
+<span id="cb75-13"><a href="re-analysis-of-rct-data.html#cb75-13" aria-hidden="true" tabindex="-1"></a>    mi_cub <span class="ot">&lt;-</span> lcmm<span class="sc">::</span><span class="fu">hlme</span>(<span class="at">fixed =</span> stress <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb75-14"><a href="re-analysis-of-rct-data.html#cb75-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mixture =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb75-15"><a href="re-analysis-of-rct-data.html#cb75-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">random =</span> <span class="fu">as.formula</span>(random),</span>
+<span id="cb75-16"><a href="re-analysis-of-rct-data.html#cb75-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ng =</span> ng,</span>
+<span id="cb75-17"><a href="re-analysis-of-rct-data.html#cb75-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">nwg =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb75-18"><a href="re-analysis-of-rct-data.html#cb75-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">idiag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb75-19"><a href="re-analysis-of-rct-data.html#cb75-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> test,</span>
+<span id="cb75-20"><a href="re-analysis-of-rct-data.html#cb75-20" aria-hidden="true" tabindex="-1"></a>                         <span class="at">subject =</span> <span class="st">&quot;id&quot;</span>)</span>
+<span id="cb75-21"><a href="re-analysis-of-rct-data.html#cb75-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-22"><a href="re-analysis-of-rct-data.html#cb75-22" aria-hidden="true" tabindex="-1"></a>    sq <span class="ot">&lt;-</span> <span class="fu">c</span>(mi_sq<span class="sc">$</span>ng, <span class="dv">2</span>, random, mi_sq<span class="sc">$</span>BIC, mi_sq<span class="sc">$</span>AIC, mi_sq<span class="sc">$</span>loglik)</span>
+<span id="cb75-23"><a href="re-analysis-of-rct-data.html#cb75-23" aria-hidden="true" tabindex="-1"></a>    cub <span class="ot">&lt;-</span> <span class="fu">c</span>(mi_cub<span class="sc">$</span>ng, <span class="dv">3</span>, random, mi_cub<span class="sc">$</span>BIC, mi_cub<span class="sc">$</span>AIC, mi_cub<span class="sc">$</span>loglik)</span>
+<span id="cb75-24"><a href="re-analysis-of-rct-data.html#cb75-24" aria-hidden="true" tabindex="-1"></a>    results_total <span class="ot">=</span> <span class="fu">rbind</span>(results_total, sq)</span>
+<span id="cb75-25"><a href="re-analysis-of-rct-data.html#cb75-25" aria-hidden="true" tabindex="-1"></a>    results_total <span class="ot">=</span> <span class="fu">rbind</span>(results_total, cub)</span>
+<span id="cb75-26"><a href="re-analysis-of-rct-data.html#cb75-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb75-27"><a href="re-analysis-of-rct-data.html#cb75-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb75-28"><a href="re-analysis-of-rct-data.html#cb75-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-29"><a href="re-analysis-of-rct-data.html#cb75-29" aria-hidden="true" tabindex="-1"></a>results_total <span class="ot">=</span> results_total[<span class="fu">order</span>(results_total<span class="sc">$</span>BIC, <span class="at">decreasing =</span> T),]</span></code></pre></div>
+<p>The solution with the lowest BIC is chosen. Now we can once more fit the LCLMM, only now we used the determined parameters</p>
+<p>CAVE: While a statistical determination of model parameters is important, there should always be clinical plausibility checks as well.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="trial-design.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["DZP_R_bookdown.pdf", "DZP_R_bookdown.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
